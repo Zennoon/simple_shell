@@ -8,7 +8,7 @@
  *
  * Return: Always 0 (Success)
  */
-int main(__attribute__((unused)) int ac, __attribute__((unused)) char **av,
+int main(__attribute__((unused)) int ac, char **av,
 	 char **ev)
 {
 	char *prompt = "shell$ ";
@@ -29,14 +29,18 @@ int main(__attribute__((unused)) int ac, __attribute__((unused)) char **av,
 		child_pid = fork();
 		if (child_pid == -1)
 		{
-			perror("Error");
+			write(2, av[0], _strlen(av[0]));
+			write(2, ": ", 2);
+			perror("");
 			return (1);
 		}
 		if (child_pid == 0)
 		{
 			if (execve(buff_arr[0], buff_arr, ev) == -1)
 			{
-				perror("Error");
+				write(2, av[0], _strlen(av[0]));
+				write(2, ": ", 2);
+				perror("");
 			}
 		}
 		else
