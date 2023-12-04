@@ -110,10 +110,3 @@ char **_strtok(char *str, char *delim)
 	strarr[i] = NULL;
 	return (strarr);
 }
-
-/**
-int main(void)
-{
-	printf("Here: %s\n", _strchr("shell", 'h'));
-}
-**/
