@@ -9,20 +9,20 @@ void print_error(char *cmd, char *msg)
 {
 	write(2, cmd, _strlen(cmd));
 	write(2, ":", 2);
-	perror(msg);
+	write(2, msg, _strlen(msg));
 }
 /**
  * get_path - gets full path of a command if it is not a path
  * itself
  * @command: input command string
- * 
+ *
  * Return: command to excute
  */
 char *get_path(char *command)
 {
 	char **paths = get_paths();
 	char *c_path;
-	
+
 	if (command[0] != '/')
 	{
 		c_path = command_path(paths, command);
@@ -66,7 +66,7 @@ int main(__attribute__((unused)) int ac, char **av,
 	}
 	char **paths = get_paths();
 	char *c_path;
-	
+
 	while (1)
 	{
 		char *line_buffer = NULL;
@@ -90,7 +90,7 @@ int main(__attribute__((unused)) int ac, char **av,
 			child_pid = fork();
 		else
 		{
-			print_error(av[0], "command not found");
+			print_error(av[0], "not found\n");
 			continue;
 		}
 		if (child_pid == -1)
@@ -101,7 +101,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		if (child_pid == 0)
 		{
 			if (execve(c_path, buff_arr, ev) == -1)
-				print_error(av[0],"");
+				print_error(av[0], "");
 		}
 		else
 			wait(&status);
