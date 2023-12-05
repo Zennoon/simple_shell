@@ -110,3 +110,27 @@ char **_strtok(char *str, char *delim)
 	strarr[i] = NULL;
 	return (strarr);
 }
+
+/**
+ * _strcat - Concatenates two strings and returns a pointer to the result
+ * @dest: The string which a string is concatenated to
+ * @src: The string to be concatenated to dest
+ *
+ * Return: A pointer to the dest string
+ */
+char *_strcat(char *dest, char *src)
+{
+	int len1;
+	int len2;
+	int i;
+
+	len1 = _strlen(dest);
+	len2 = _strlen(src);
+	for (i = 0; i < len2; i++)
+	{
+		dest[len1] = src[i];
+		len1++;
+	}
+	dest[len1] = '\0';
+	return (dest);
+}

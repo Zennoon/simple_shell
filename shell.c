@@ -29,6 +29,9 @@ int main(__attribute__((unused)) int ac, char **av,
 		}
 		ptr++;
 	}
+	char **paths = get_paths();
+	char *c_path;
+	
 	while (1)
 	{
 		char *line_buffer = NULL;
@@ -57,7 +60,8 @@ int main(__attribute__((unused)) int ac, char **av,
 		}
 		if (child_pid == 0)
 		{
-			if (execve(buff_arr[0], buff_arr, ev) == -1)
+			c_path = command_path(paths, buff_arr[0]);
+			if (execve(c_path, buff_arr, ev) == -1)
 			{
 				write(2, av[0], _strlen(av[0]));
 				write(2, ": ", 2);
