@@ -25,4 +25,6 @@ void *_realloc(void *, unsigned int, unsigned int);
 void free_arr(char **);
 char **get_paths(void);
 char *command_path(char **, char *);
+void print_prompt(void);
+void exit_program(char **, size_t);
 #endif

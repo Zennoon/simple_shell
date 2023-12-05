@@ -11,45 +11,23 @@
 int main(__attribute__((unused)) int ac, char **av,
 	 char **ev)
 {
-	int i;
-	char *prompt = "shell$ ";
-	char **ptr, *ptr2 = malloc(sizeof(char) * 6);
-
-	ptr = ev;
-	while (*ptr)
-	{
-		for (i = 0; i < 5; i++)
-		{
-			ptr2[i] = (*ptr)[i];
-		}
-		ptr2[i] = '\0';
-		if (!_strcmp(ptr2, "SHLVL"))
-		{
-			break;
-		}
-		ptr++;
-	}
 	char **paths = get_paths();
 	char *c_path;
-	
+
 	while (1)
 	{
 		char *line_buffer = NULL;
 		char **buff_arr;
 		size_t buff_size = 0;
-		int status;
+		int status = 0;
 		pid_t child_pid;
 
-		if (!_strcmp("SHLVL=1", *ptr))
-		{
-			write(1, prompt, _strlen(prompt));
-		}
-		status = 0;
+		print_prompt();
 		buff_size = getline(&line_buffer, &buff_size, stdin);
 		line_buffer[buff_size - 1] = '\0';
 		buff_arr = _strtok(line_buffer, " \t");
 		if ((int) buff_size == -1 || !_strcmp(buff_arr[0], "exit"))
-			exit(98);
+			exit_program(buff_arr, buff_size);
 		child_pid = fork();
 		if (child_pid == -1)
 		{
@@ -73,6 +51,5 @@ int main(__attribute__((unused)) int ac, char **av,
 		free(line_buffer);
 		free_arr(buff_arr);
 	}
-	free(ptr2);
 	return (0);
 }
