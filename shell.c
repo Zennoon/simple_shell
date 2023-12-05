@@ -46,7 +46,24 @@ char *get_path(char *command)
 int main(__attribute__((unused)) int ac, char **av,
 	 char **ev)
 {
+	int i;
 	char *prompt = "shell$ ";
+	char **ptr, *ptr2 = malloc(sizeof(char) * 6);
+
+	ptr = ev;
+	while (*ptr)
+	{
+		for (i = 0; i < 5; i++)
+		{
+			ptr2[i] = (*ptr)[i];
+		}
+		ptr2[i] = '\0';
+		if (!_strcmp(ptr2, "SHLVL"))
+		{
+			break;
+		}
+		ptr++;
+	}
 	char **paths = get_paths();
 	char *c_path;
 	
@@ -56,9 +73,13 @@ int main(__attribute__((unused)) int ac, char **av,
 		char **buff_arr;
 		char *c_path;
 		size_t buff_size = 0;
-		int status = write(1, prompt, _strlen(prompt));
+		int status;
 		pid_t child_pid;
 
+		if (!_strcmp("SHLVL=1", *ptr))
+		{
+			write(1, prompt, _strlen(prompt));
+		}
 		status = 0;
 		buff_size = getline(&line_buffer, &buff_size, stdin);
 		line_buffer[buff_size - 1] = '\0';
@@ -87,5 +108,6 @@ int main(__attribute__((unused)) int ac, char **av,
 		free(line_buffer);
 		free_arr(buff_arr);
 	}
+	free(ptr2);
 	return (0);
 }
