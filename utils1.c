@@ -20,3 +20,53 @@ char *_strcpy(char *dest, char *src)
 	dest[i] = '\0';
 	return (dest);
 }
+
+/**
+ * pow_ten - caluculate ten raised to a number
+ * @num: number input
+ *
+ * Return: result
+ */
+unsigned int pow_ten(unsigned int n)
+{
+	int res = 1;
+
+	while (n > 0)
+	{
+		res *= 10;
+		n--;
+	}
+	return (res);
+}
+/**
+ * num_to_str - converts unsigned int to string
+ * @num: number to be converted
+ *
+ * Return: string output
+ */
+char *num_to_str(unsigned int num)
+{
+	unsigned int len = 1, i = 0;
+	unsigned int tmp = num;
+	char *str;
+
+	while (tmp / 10)
+	{
+		len++;
+		tmp /= 10;
+	}
+	str = malloc(len + 1);
+	len--;
+	while (len > 1)
+	{
+		int n = num / pow_ten(len);
+
+		str[i] = n + '0';
+		num -= n * pow_ten(len);
+		i++;
+		len--;
+	}
+	str[i] = (num % 10) + '0';
+	str[i + 1] = '\0';
+	return (str);
+}
