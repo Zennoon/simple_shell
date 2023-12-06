@@ -8,7 +8,7 @@
 void print_error(char *cmd, char *msg)
 {
 	write(2, cmd, _strlen(cmd));
-	write(2, ":", 2);
+	write(2, ": ", 2);
 	write(2, msg, _strlen(msg));
 }
 /**
@@ -46,9 +46,6 @@ char *get_path(char *command)
 int main(__attribute__((unused)) int ac, char **av,
 	 char **ev)
 {
-	char **paths = get_paths();
-	char *c_path;
-
 	while (1)
 	{
 		char *line_buffer = NULL;
