@@ -76,3 +76,24 @@ void free_arr(char **arr)
 	}
 	free(arr);
 }
+
+/**
+ * free_strs - Frees memory allocated for a variable number of strings
+ * @n: The number of memory areas to free
+ *
+ * Return: void
+ */
+void free_strs(int n, ...)
+{
+	int i = 0;
+	va_list ap;
+	char *str;
+
+	va_start(ap, n);
+	while (i < n)
+	{
+		str = va_arg(ap, char *);
+		free(str);
+		i++;
+	}
+}

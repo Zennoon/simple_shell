@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <dirent.h>
+#include <stdarg.h>
 
 /** Global vars **/
 extern char **environ;
@@ -19,11 +20,12 @@ char *_strchr(char *, char);
 int _strcmp(char *, char *);
 size_t _strlen(char *);
 char **_strtok(char *, char *);
-char *_strcat(char *, char *);
+char *_strcat(int, ...);
 char *_strcpy(char *, char *);
 char *num_to_str(unsigned int);
 void *_realloc(void *, unsigned int, unsigned int);
 void free_arr(char **);
+void free_strs(int, ...);
 char **get_paths(void);
 char *command_path(char **, char *);
 void print_prompt(void);

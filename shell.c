@@ -3,20 +3,18 @@
 int command_count = 0;
 /**
  * print_error - prints errno msg to stderr
+ * @shl_name: Current name of the executable (shell)
  * @cmd: the failed command
  * @msg: error message
  */
-void print_error(char *cmd, char *msg)
+void print_error(char *shl_name, char *cmd, char *msg)
 {
 	char *cc = num_to_str(command_count);
+	char *err;
 
-	write(2, "./hsh", 5);
-	write(2, ": ", 2);
-	write(2, cc, _strlen(cc));
-	write(2, ": ", 2);
-	write(2, cmd, _strlen(cmd));
-	write(2, ": ", 2);
-	write(2, msg, _strlen(msg));
+	err = _strcat(7, shl_name, ": ", cc, ": ", cmd, ": ", msg);
+	write(2, err, _strlen(err));
+	free(err);
 }
 /**
  * get_path - gets full path of a command if it is not a path
@@ -30,7 +28,7 @@ char *get_path(char *command)
 	char **paths = get_paths();
 	char *c_path;
 
-	if (command[0] != '/')
+	if (!_strchr(command, '/'))
 	{
 		c_path = command_path(paths, command);
 		if (c_path == NULL)
@@ -55,9 +53,7 @@ int main(__attribute__((unused)) int ac, char **av,
 {
 	while (1)
 	{
-		char *line_buffer = NULL;
-		char **buff_arr;
-		char *c_path;
+		char *line_buffer = NULL, *c_path, **buff_arr;
 		size_t buff_size = 0;
 		int status = 0;
 		pid_t child_pid;
@@ -67,27 +63,28 @@ int main(__attribute__((unused)) int ac, char **av,
 		line_buffer[buff_size - 1] = '\0';
 		buff_arr = _strtok(line_buffer, " \t");
 		if ((int) buff_size == -1 || !_strcmp(buff_arr[0], "exit"))
-		exit_program(buff_arr, buff_size);
-		++command_count;
-		if ((c_path = get_path(buff_arr[0])) != NULL)
+			exit_program(buff_arr, buff_size);
+		c_path = get_path(buff_arr[0]);
+		if (c_path != NULL)
 			child_pid = fork();
 		else
 		{
-			print_error(buff_arr[0], "not found\n");
+			print_error(av[0], buff_arr[0], "not found\n");
 			continue;
 		}
 		if (child_pid == -1)
 		{
-			print_error(buff_arr[0], "process failed\n");
+			print_error(av[0], buff_arr[0], "process failed\n");
 			return (1);
 		}
 		if (child_pid == 0)
 		{
 			if (execve(c_path, buff_arr, ev) == -1)
-				print_error(buff_arr[0], "not found\n");
+				print_error(av[0], buff_arr[0], "not found\n");
 		}
 		else
 			wait(&status);
+		/**free_strs(2, line_buffer, c_path);**/
 		free(line_buffer);
 		free_arr(buff_arr);
 	}
@@ -101,19 +98,19 @@ int main(__attribute__((unused)) int ac, char **av,
  * Return: status
  */
 /**
-int exec_command(char **args)
-{
-	char **paths;
-	char *c_path;
-	pid_t child_pid;
-
-	if (args[0][0] != '/')
-	{
-		if (built_in(args[0]))
-			return (execute_builtin(args));
-		c_path = get_Path(args[0]);
-		if (c_paths != NULL)
-			child_pid = fork();
-	}
-}
+ *int exec_command(char **args)
+ *{
+ *	char **paths;
+ *	char *c_path;
+ *	pid_t child_pid;
+ *
+ *	if (args[0][0] != '/')
+ *	{
+ *		if (built_in(args[0]))
+ *			return (execute_builtin(args));
+ *		c_path = get_Path(args[0]);
+ *		if (c_paths != NULL)
+ *			child_pid = fork();
+ *	}
+ *}
 **/

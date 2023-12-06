@@ -57,8 +57,7 @@ char *command_path(char **dirs, char *command)
 		closedir(dir);
 		if (path != NULL)
 		{
-			path = _strcat(path, "/");
-			path = _strcat(path, command);
+			path = _strcat(3, path, "/", command);
 			return (path);
 		}
 	}

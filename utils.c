@@ -113,24 +113,31 @@ char **_strtok(char *str, char *delim)
 
 /**
  * _strcat - Concatenates two strings and returns a pointer to the result
- * @dest: The string which a string is concatenated to
- * @src: The string to be concatenated to dest
+ * @num: The number of strings to concatenate
+ *
  *
  * Return: A pointer to the dest string
  */
-char *_strcat(char *dest, char *src)
+char *_strcat(int num, ...)
 {
-	int len1;
-	int len2;
-	int i;
+	int i = 0, j = 0;
+	unsigned int k;
+	va_list ap;
+	char *cat = malloc(1);
+	char *str;
 
-	len1 = _strlen(dest);
-	len2 = _strlen(src);
-	for (i = 0; i < len2; i++)
+	va_start(ap, num);
+	while (i < num)
 	{
-		dest[len1] = src[i];
-		len1++;
+		str = va_arg(ap, char *);
+		cat = _realloc(cat, j + 1, j + _strlen(str) + 1);
+		for (k = 0; k < _strlen(str); k++)
+		{
+			cat[j] = str[k];
+			j++;
+		}
+		i++;
 	}
-	dest[len1] = '\0';
-	return (dest);
+	cat[j] = '\0';
+	return (cat);
 }

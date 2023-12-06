@@ -23,7 +23,7 @@ char *_strcpy(char *dest, char *src)
 
 /**
  * pow_ten - caluculate ten raised to a number
- * @num: number input
+ * @n: number input
  *
  * Return: result
  */
