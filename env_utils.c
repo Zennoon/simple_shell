@@ -9,6 +9,7 @@ char **get_paths(void)
 {
 	int i;
 	char *path;
+	char **paths;
 
 	if (!environ)
 		return (NULL);
@@ -19,13 +20,17 @@ char **get_paths(void)
 		if (_strcmp(key[0], "PATH") == 0)
 		{
 			path = key[1];
-			break;
+			if (path == NULL)
+				return (NULL);
+			paths = _strtok(path, ":");
+			return (paths);
 		}
+		//free(key[0]);
+		//free(key[1]);
+		free(key);
 	}
-	if (path == NULL)
-		return (NULL);
 
-	return (_strtok(path, ":"));
+	return (NULL);
 }
 
 /**
