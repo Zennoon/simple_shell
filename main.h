@@ -21,6 +21,7 @@ size_t _strlen(char *);
 char **_strtok(char *, char *);
 char *_strcat(char *, char *);
 char *_strcpy(char *, char *);
+char *num_to_str(unsigned int);
 void *_realloc(void *, unsigned int, unsigned int);
 void free_arr(char **);
 char **get_paths(void);
