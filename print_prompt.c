@@ -8,7 +8,7 @@
 void print_prompt(void)
 {
 	int i = 0;
-	char *shlvl, *pwd, *prompt = "simple_shell:";
+	char *shlvl, *pwd = NULL, *prompt = "simple_shell:";
 
 	while (environ && environ[i])
 	{
@@ -23,7 +23,10 @@ void print_prompt(void)
 	}
 	if (!_strcmp(shlvl, "1"))
 	{
-		prompt = _strcat(3, prompt, pwd, "$ ");
+		if (pwd == NULL)
+			prompt = _strcat(2, prompt, "$ ");
+		else
+			prompt = _strcat(3, prompt, pwd, "$ ");
 		i = write(1, prompt, _strlen(prompt));
 		free(prompt);
 	}
