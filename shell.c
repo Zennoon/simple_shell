@@ -115,8 +115,8 @@ int exec_command(char **av, char **args, char **ev)
 
 	if (_strchr(args[0], '/') == NULL)
 	{
-		/**if (built_in(args[0]))
-		   return (execute_builtin(args));**/
+		if (is_builtin(args[0]) == 1)
+		   return (execute_builtin(args));
 		c_path = get_path(args[0]);
 	}
 	else

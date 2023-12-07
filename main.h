@@ -30,4 +30,17 @@ char **get_paths(void);
 char *command_path(char **, char *);
 void print_prompt(void);
 void exit_program(char **, size_t);
+
+/** built-in funcstions **/
+int is_builtin(char *);
+int execute_builtin(char **);
+int _cd(char **);
+int _env(char **);
+
+/** structs **/
+typedef struct built_in
+{
+	char *name;
+	int (*func)(char **);
+} built_in;
 #endif
