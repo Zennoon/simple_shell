@@ -34,6 +34,7 @@ void exit_program(char **, size_t);
 /** built-in funcstions **/
 int is_builtin(char *);
 int execute_builtin(char **);
+int set_env_var(char *, int, char *);
 int _cd(char **);
 int _env(char **);
 
