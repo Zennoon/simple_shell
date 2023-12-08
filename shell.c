@@ -64,6 +64,11 @@ int main(__attribute__((unused)) int ac, char **av,
 		line_size = getline(&line_buffer, &buff_size, stdin);
 		if (line_size <= 1)
 		{
+			if (line_size == -1)
+			{
+				write(1, "\n", 1);
+				break;
+			}
 			free(line_buffer);
 			continue;
 		}
