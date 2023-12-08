@@ -31,11 +31,11 @@ char *command_path(char **, char *);
 void print_prompt(void);
 void exit_program(char **, size_t);
 int is_interactive(void);
-
+char *get_env_var(char *);
+int set_env_var(char *, int, char *);
 /** built-in funcstions **/
 int is_builtin(char *);
 int execute_builtin(char **);
-int set_env_var(char *, int, char *);
 int _cd(char **);
 int _env(char **);
 

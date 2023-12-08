@@ -10,7 +10,8 @@ void print_prompt(void)
 	int i = 0;
 	char *pwd = NULL, *prompt = "simple_shell:";
 
-	while (environ && environ[i])
+	pwd = &get_env_var("PWD")[4];
+	/**while (environ && environ[i])
 	{
 		char **env_var = _strtok(environ[i], "=");
 
@@ -19,6 +20,7 @@ void print_prompt(void)
 		i++;
 		free_arr(env_var);
 	}
+	**/
 	if (is_interactive())
 	{
 		if (pwd == NULL)
@@ -28,4 +30,5 @@ void print_prompt(void)
 		i = write(1, prompt, _strlen(prompt));
 		free(prompt);
 	}
+	i = i;
 }

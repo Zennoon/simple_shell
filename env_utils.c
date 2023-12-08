@@ -68,3 +68,68 @@ char *command_path(char **dirs, char *command)
 	}
 	return (NULL);
 }
+
+/**
+ * get_env_var - Retrieve a variable - value pair from environ
+ * @var_name: Variable name of the pair to retrieve
+ *
+ * Return: A pair with the given var_name if it exists, NULL if it doesn't
+ */
+char *get_env_var(char *var_name)
+{
+	char *env_var = NULL;
+	int i = 0;
+
+	while (environ && environ[i])
+	{
+		char **str_arr = _strtok(environ[i], "=");
+
+		if (!_strcmp(str_arr[0], var_name))
+			env_var = environ[i];
+		i++;
+		free_arr(str_arr);
+	}
+	return (env_var);
+}
+
+/**
+ * set_env_var - Sets the value of a given var from environ
+ * @var: The name of the variable
+ * @len: Length of var + 1 (for the '=')
+ * @val: The value to set to the variable
+ *
+ * Return: 0 if successful, 1 otherwise
+ */
+int set_env_var(char *var, int len, char *val)
+{
+	int i = 0, j;
+	char *ptr;
+
+	while (environ[i])
+	{
+		char **str_arr = _strtok(environ[i], "=");
+
+		if (!_strcmp(var, str_arr[0]))
+		{
+			free_arr(str_arr);
+			break;
+		}
+		i++;
+		free_arr(str_arr);
+	}
+	ptr = environ[i];
+	environ[i] = malloc(sizeof(char) * (len + _strlen(val) + 1));
+	for (j = 0; j < len; j++)
+	{
+		environ[i][j] = *ptr;
+		ptr++;
+	}
+	while (*val)
+	{
+		environ[i][j] = *val;
+		val++;
+		j++;
+	}
+	environ[i][j] = '\0';
+	return (0);
+}
