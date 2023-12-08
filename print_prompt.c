@@ -8,20 +8,18 @@
 void print_prompt(void)
 {
 	int i = 0;
-	char *shlvl, *pwd = NULL, *prompt = "simple_shell:";
+	char *pwd = NULL, *prompt = "simple_shell:";
 
 	while (environ && environ[i])
 	{
 		char **env_var = _strtok(environ[i], "=");
 
-		if (!_strcmp(env_var[0], "SHLVL"))
-			shlvl = &environ[i][6];
-		else if (!_strcmp(env_var[0], "PWD"))
+		if (!_strcmp(env_var[0], "PWD"))
 			pwd = &environ[i][4];
 		i++;
 		free_arr(env_var);
 	}
-	if (!_strcmp(shlvl, "1"))
+	if (is_interactive())
 	{
 		if (pwd == NULL)
 			prompt = _strcat(2, prompt, "$ ");

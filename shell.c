@@ -95,6 +95,8 @@ int main(__attribute__((unused)) int ac, char **av,
 		status = status;
 		free(line_buffer);
 		free_arr(buff_arr);
+		if (!is_interactive())
+			break;
 	}
 	return (0);
 }

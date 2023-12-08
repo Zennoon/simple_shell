@@ -30,6 +30,7 @@ char **get_paths(void);
 char *command_path(char **, char *);
 void print_prompt(void);
 void exit_program(char **, size_t);
+int is_interactive(void);
 
 /** built-in funcstions **/
 int is_builtin(char *);
