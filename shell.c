@@ -1,6 +1,6 @@
 #include "main.h"
 
-int exec_command(char **, char **, char **);
+int exec_command(char **, char *, char **);
 int command_count = 0;
 /**
  * print_error - prints errno msg to stderr
@@ -58,19 +58,19 @@ int main(__attribute__((unused)) int ac, char **av,
 	{
 		char *line_buffer = NULL, **buff_arr;
 		size_t buff_size = 0;
-		int status = 0;
+		int status = 0, line_size = 0;
 
 		print_prompt();
-		buff_size = getline(&line_buffer, &buff_size, stdin);
-		if (buff_size <= 1)
+		line_size = getline(&line_buffer, &buff_size, stdin);
+		if (line_size <= 1)
 		{
 			free(line_buffer);
 			continue;
 		}
-		line_buffer[buff_size - 1] = '\0';
-		buff_arr = _strtok(line_buffer, " \t");
-		if ((int) buff_size == -1 || !_strcmp(buff_arr[0], "exit"))
-			exit_program(buff_arr, buff_size);
+		line_buffer[line_size - 1] = '\0';
+		//buff_arr = _strtok(line_buffer, " \t");
+		//if ((int) buff_size == -1 || !_strcmp(buff_arr[0], "exit"))
+		//	exit_program(buff_arr, buff_size);
 		++command_count;
 		/**if ((c_path = get_path(buff_arr[0])) != NULL)
 			child_pid = fork();
@@ -91,10 +91,10 @@ int main(__attribute__((unused)) int ac, char **av,
 		}
 		else
 			wait(&status);**/
-		status = exec_command(av, buff_arr, ev);
+		status = exec_command(av, line_buffer, ev);
 		status = status;
-		free(line_buffer);
-		free_arr(buff_arr);
+		//free(line_buffer);
+		//free_arr(buff_arr);
 		if (!is_interactive())
 			break;
 	}
@@ -110,38 +110,52 @@ int main(__attribute__((unused)) int ac, char **av,
  * 2 -> command excution failed
  */
 
-int exec_command(char **av, char **args, char **ev)
+int exec_command(char **av, char *line, char **ev)
 {
+	int i = 0, j;
 	char *c_path;
 	pid_t child_pid;
+	char **commands;
 
-	if (_strchr(args[0], '/') == NULL)
+	commands = _strtok(line, ";");
+	for (j = 0; commands[j]; j++)
+		;
+	while (i < j)
 	{
-		if (is_builtin(args[0]) == 1)
-		   return (execute_builtin(args));
-		c_path = get_path(args[0]);
-	}
-	else
-		c_path = args[0];
+		char **args = _strtok(commands[i], " /t");
 
-	if (c_path != NULL)
-		child_pid = fork();
-	else
-	{
-		print_error(av[0], args[0], "not found\n");
-		return (1);
-	}
-	if (child_pid == -1)
-		return (2);
-	if (child_pid == 0)
-	{
-		if (execve(c_path, args, ev) == -1)
+		if (_strchr(args[0], '/') == NULL)
+		{
+			if (is_builtin(args[0]) == 1)
+			   	return (execute_builtin(args));
+			c_path = get_path(args[0]);
+		}
+		else
+			c_path = args[0];
+
+		if (c_path != NULL)
+			child_pid = fork();
+		else
 		{
 			print_error(av[0], args[0], "not found\n");
-			return (2);
+			i++;
+			continue;
 		}
+		if (child_pid == -1)
+			return (2);
+		if (child_pid == 0)
+		{
+			if (execve(c_path, args, ev) == -1)
+			{
+				print_error(av[0], args[0], "excution failed\n");
+				return (2);
+			}
+		}
+		else
+			wait(NULL);
+		free(args);
+		i++;
 	}
-	else
-		wait(NULL);
+	free(commands);
 	return (0);
 }
