@@ -99,6 +99,7 @@ int _unsetenv(char **args)
 		{
 			free_arr(str_arr);
 			break;
+		}
 		i++;
 		free_arr(str_arr);
 	}
