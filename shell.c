@@ -56,7 +56,7 @@ int main(__attribute__((unused)) int ac, char **av,
 {
 	while (1)
 	{
-		char *line_buffer = NULL, **buff_arr;
+		char *line_buffer = NULL;
 		size_t buff_size = 0;
 		int status = 0, line_size = 0;
 
@@ -73,9 +73,9 @@ int main(__attribute__((unused)) int ac, char **av,
 			continue;
 		}
 		line_buffer[line_size - 1] = '\0';
-		//buff_arr = _strtok(line_buffer, " \t");
-		//if ((int) buff_size == -1 || !_strcmp(buff_arr[0], "exit"))
-		//	exit_program(buff_arr, buff_size);
+		/**buff_arr = _strtok(line_buffer, " \t");**/
+		if ((int) line_size == -1)
+			exit_program(&line_buffer, line_size);
 		++command_count;
 		/**if ((c_path = get_path(buff_arr[0])) != NULL)
 			child_pid = fork();
@@ -98,8 +98,8 @@ int main(__attribute__((unused)) int ac, char **av,
 			wait(&status);**/
 		status = exec_command(av, line_buffer, ev);
 		status = status;
-		//free(line_buffer);
-		//free_arr(buff_arr);
+		/**free(line_buffer);
+		   free_arr(buff_arr);**/
 		if (!is_interactive())
 			break;
 	}
@@ -127,8 +127,10 @@ int exec_command(char **av, char *line, char **ev)
 		;
 	while (i < j)
 	{
-		char **args = _strtok(commands[i], " /t");
+		char **args = _strtok(commands[i], " \t");
 
+		if (!_strcmp(args[0], "exit"))
+			exit_program(args, i);
 		if (_strchr(args[0], '/') == NULL)
 		{
 			if (is_builtin(args[0]) == 1)
