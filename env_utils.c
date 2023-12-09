@@ -25,9 +25,7 @@ char **get_paths(void)
 			paths = _strtok(path, ":");
 			return (paths);
 		}
-		/**free(key[0]);
-		   free(key[1]);**/
-		free(key);
+		free_arr(key);
 	}
 
 	return (NULL);
@@ -95,7 +93,6 @@ char *get_env_var(char *var_name)
 /**
  * set_env_var - Sets the value of a given var from environ
  * @var: The name of the variable
- * @len: Length of var + 1 (for the '=')
  * @val: The value to set to the variable
  *
  * Return: 0 if successful, 1 otherwise

@@ -21,16 +21,19 @@ int is_builtin(char *cmd)
 }
 
 /**
- * excute_builtin - finds built-in handdle and excutes it
- * @args: arguments (args[0] is the command)
+ * execute_builtin - finds built-in handdle and excutes it
+ * @args: Arguments given along with the command
+ * @av: 1d array of the command line arguments given when the program is
+ * executed
+ * @cmd_no: The current command number
  *
  * Return: 0 on success
  */
-int execute_builtin(char **args)
+int execute_builtin(char **args, char **av, int cmd_no)
 {
 	int i = 0;
 	char *command = args[0];
-	int (*func)(char **args);
+	int (*func)(char **args, char **av, int cmd_no);
 	built_in built_ins[] = {
 		{"env", _env},
 		{"cd", _cd},
@@ -42,12 +45,12 @@ int execute_builtin(char **args)
 	{
 		if (_strcmp(command, built_ins[i].name) == 0)
 		{
-				func = built_ins[i].func;
-				break;
+			func = built_ins[i].func;
+			break;
 		}
 		i++;
 	}
 	if (!func)
 		return (1);
-	return ((*func)(args));
+	return ((*func)(args, av, cmd_no));
 }

@@ -11,16 +11,6 @@ void print_prompt(void)
 	char *pwd = NULL, *prompt = "simple_shell:";
 
 	pwd = &get_env_var("PWD")[4];
-	/**while (environ && environ[i])
-	{
-		char **env_var = _strtok(environ[i], "=");
-
-		if (!_strcmp(env_var[0], "PWD"))
-			pwd = &environ[i][4];
-		i++;
-		free_arr(env_var);
-	}
-	**/
 	if (is_interactive())
 	{
 		if (pwd == NULL)
