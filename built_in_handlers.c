@@ -24,14 +24,17 @@ int _cd(char **args, char **av, int cmd_no)
 	else if (!_strcmp(args[1], "-"))
 	{
 		dir = old_pwd;
-		write(1, dir, _strlen(dir));
-		write(1, "\n", 1);
 	}
 	if (chdir(dir) == 0)
 	{
 		buff = getcwd(buff, 1024);
 		set_env_var("PWD", buff);
 		set_env_var("OLDPWD", old_buff);
+		if (args[1] != NULL && !_strcmp(args[1], "-"))
+		{
+			write(1, dir, _strlen(dir));
+			write(1, "\n", 1);
+		}
 	}
 	else
 	{
