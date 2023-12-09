@@ -129,6 +129,8 @@ int exec_command(char **av, char *line, char **ev)
 	{
 		char **args = _strtok(commands[i], " \t");
 
+		if (args[0][0] == '#')
+			break;
 		if (!_strcmp(args[0], "exit"))
 			exit_program(args, i);
 		if (_strchr(args[0], '/') == NULL)

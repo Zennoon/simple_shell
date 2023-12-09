@@ -100,10 +100,9 @@ char *get_env_var(char *var_name)
  *
  * Return: 0 if successful, 1 otherwise
  */
-int set_env_var(char *var, int len, char *val)
+int set_env_var(char *var, char *val)
 {
-	int i = 0, j;
-	char *ptr;
+	int i = 0;
 
 	while (environ[i])
 	{
@@ -117,19 +116,12 @@ int set_env_var(char *var, int len, char *val)
 		i++;
 		free_arr(str_arr);
 	}
-	ptr = environ[i];
-	environ[i] = malloc(sizeof(char) * (len + _strlen(val) + 1));
-	for (j = 0; j < len; j++)
+	if (environ[i] == NULL)
 	{
-		environ[i][j] = *ptr;
-		ptr++;
+		environ[i + 1] = NULL;
 	}
-	while (*val)
-	{
-		environ[i][j] = *val;
-		val++;
-		j++;
-	}
-	environ[i][j] = '\0';
+	environ[i] = _strcat(3, var, "=", val);
+	if (environ[i] == NULL)
+		return (-1);
 	return (0);
 }

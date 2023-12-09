@@ -36,8 +36,8 @@ int _cd(char **args)
 	if (chdir(dir) == 0)
 	{
 		buff = getcwd(buff, 1024);
-		set_env_var("PWD", 4, buff);
-		set_env_var("OLDPWD", 7, old_buff);
+		set_env_var("PWD", buff);
+		set_env_var("OLDPWD", old_buff);
 	}
 	else
 		perror("");
@@ -58,6 +58,56 @@ int _env(__attribute__((unused)) char **args)
 		write(1, str, _strlen(str));
 		free(str);
 		ptr++;
+	}
+	return (0);
+}
+
+/**
+ * _setenv - Initialize a new environment variable or modify an existing one
+ * args: An array of the given arguments as strings
+ *
+ * Return: 0 if successful, -1 otherwise
+ */
+int _setenv(char **args)
+{
+	if (args[1] == NULL || args[2] == NULL)
+		printf("Error\n");
+	if (set_env_var(args[1], args[2]) == -1)
+	{
+		printf("Error");
+		return (-1);
+	}
+	return (0);
+}
+/**
+ * _unsetenv - Remove an environment variable
+ * @args: An array of the given arguments as strings
+ *
+ * Return: 0 if successful, -1 otherwise
+ */
+int _unsetenv(char **args)
+{
+	int i = 0;
+
+	if (args[1] == NULL)
+		return (-1);
+	while (environ[i])
+	{
+		char **str_arr = _strtok(environ[i], "=");
+
+		if (!_strcmp(str_arr[0], args[1]))
+		{
+			free_arr(str_arr);
+			break;
+		i++;
+		free_arr(str_arr);
+	}
+	if (environ[i] == NULL)
+		return (-1);
+	while (environ[i] != NULL)
+	{
+		environ[i] = environ[i + 1];
+		i++;
 	}
 	return (0);
 }

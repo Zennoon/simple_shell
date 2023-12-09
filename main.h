@@ -32,13 +32,14 @@ void print_prompt(void);
 void exit_program(char **, size_t);
 int is_interactive(void);
 char *get_env_var(char *);
-int set_env_var(char *, int, char *);
+int set_env_var(char *, char *);
 /** built-in funcstions **/
 int is_builtin(char *);
 int execute_builtin(char **);
 int _cd(char **);
 int _env(char **);
-
+int _setenv(char **);
+int _unsetenv(char **);
 /** structs **/
 typedef struct built_in
 {
