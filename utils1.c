@@ -70,3 +70,22 @@ char *num_to_str(unsigned int num)
 	str[i + 1] = '\0';
 	return (str);
 }
+
+/**
+ * _memcpy - memcpy implementation
+ * @dest: destination
+ * @src: source
+ * @n: number of bytes to copy
+ *
+ * Return: pointer to dest
+ */
+char *_memcpy(char *dest, char *src, unsigned int n)
+{
+	unsigned int i;
+
+	for (i = 0; i < n; i++)
+	{
+		*(dest + i) = src[i];
+	}
+	return (dest);
+}
