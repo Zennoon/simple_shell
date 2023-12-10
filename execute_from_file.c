@@ -84,10 +84,11 @@ char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 		(*line_count)++;
 		i++;
 	}
+	free(buffer);
 	return (lines);
 }
 /**
- * exexute_from_file - executes command from file line by line
+ * execute_from_file - executes command from file line by line
  * @av: argument vector
  * @ev: env
  *
@@ -111,6 +112,9 @@ int execute_from_file(char **av, char ** ev)
 	{
 		exec_command(av, lines[i], ev, 0);
 	}
+	for(i = 0; lines[i]; i++)
+		free(lines[i]);
+	free(lines);
 	return (0);
 }
 
