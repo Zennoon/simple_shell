@@ -1,13 +1,18 @@
 #include "main.h"
 
 int command_count = 0;
+int exec_command(char **, char *, char **, int);
+void execute_fork(char *, char **, char **, char **, int);
 /**
  * print_error - prints errno msg to stderr
  * @shl_name: Current name of the executable (shell)
  * @cmd: the failed command
  * @msg: error message
+ * @command_count: The current command number
+ *
+ * Return: void
  */
-void print_error(char *shl_name, char *cmd, char *msg)
+void print_error(char *shl_name, char *cmd, char *msg, int command_count)
 {
 	char *cc = num_to_str(command_count);
 	char *err;
@@ -36,9 +41,7 @@ char *get_path(char *command)
 	}
 	else
 		c_path = command;
-	/**for ( ; paths[i]; i++)
-	   free(paths[i]);**/
-	free(paths);
+	free_arr(paths);
 	return (c_path);
 }
 
@@ -53,6 +56,8 @@ char *get_path(char *command)
 int main(__attribute__((unused)) int ac, char **av,
 	 char **ev)
 {
+	int command_count = 0;
+
 	while (1)
 	{
 		char *line_buffer = NULL;
@@ -78,29 +83,8 @@ int main(__attribute__((unused)) int ac, char **av,
 		if ((int) line_size == -1)
 			exit_program(&line_buffer, line_size);
 		++command_count;
-		/**if ((c_path = get_path(buff_arr[0])) != NULL)
-			child_pid = fork();
-		else
-		{
-			print_error(av[0], buff_arr[0], "not found\n");
-			continue;
-		}
-		if (child_pid == -1)
-		{
-			print_error(av[0], buff_arr[0], "process failed\n");
-			return (1);
-		}
-		if (child_pid == 0)
-		{
-			if (execve(c_path, buff_arr, ev) == -1)
-				print_error(av[0], buff_arr[0], "not found\n");
-		}
-		else
-			wait(&status);**/
-		status = exec_command(av, line_buffer, ev);
+		status = exec_command(av, line_buffer, ev, command_count);
 		status = status;
-		/**free(line_buffer);
-		   free_arr(buff_arr);**/
 		if (!is_interactive())
 			break;
 	}
@@ -109,19 +93,19 @@ int main(__attribute__((unused)) int ac, char **av,
 
 /**
  * exec_command - excutes built-in and system commands
- * @args: array containing command and args
+ * @av: array containing command and args
+ * @line: Buffer containing the data read from stdin
  * @ev: environment
+ * @cmd_cnt: The current command number
  *
  * Return: status - 0 -> success, 1-> command not found
  * 2 -> command excution failed
  */
 
-int exec_command(char **av, char *line, char **ev)
+int exec_command(char **av, char *line, char **ev, int cmd_cnt)
 {
 	int i = 0, j;
-	char *c_path;
-	pid_t child_pid;
-	char **commands;
+	char *c_path, **commands;
 
 	commands = _strtok(line, ";");
 	for (j = 0; commands[j]; j++)
@@ -130,40 +114,61 @@ int exec_command(char **av, char *line, char **ev)
 	{
 		char **args = _strtok(commands[i], " \t");
 
+		if (args[0][0] == '#')
+			break;
 		if (!_strcmp(args[0], "exit"))
 			exit_program(args, i);
 		if (_strchr(args[0], '/') == NULL)
 		{
 			if (is_builtin(args[0]) == 1)
-			   	return (execute_builtin(args));
+			{
+				execute_builtin(args, av, cmd_cnt);
+				i++;
+				continue;
+			}
 			c_path = get_path(args[0]);
 		}
 		else
 			c_path = args[0];
-
-		if (c_path != NULL)
-			child_pid = fork();
-		else
+		if (c_path == NULL)
 		{
-			print_error(av[0], args[0], "not found\n");
+			print_error(av[0], args[0], "not found\n", cmd_cnt);
 			i++;
 			continue;
 		}
-		if (child_pid == -1)
-			return (2);
-		if (child_pid == 0)
-		{
-			if (execve(c_path, args, ev) == -1)
-			{
-				print_error(av[0], args[0], "excution failed\n");
-				return (2);
-			}
-		}
-		else
-			wait(NULL);
-		free(args);
+		execute_fork(c_path, args, av, ev, cmd_cnt);
+		free_arr(args);
 		i++;
 	}
-	free(commands);
+	free_arr(commands);
 	return (0);
+}
+
+/**
+ * execute_fork - Create a child process to execute a command
+ * @c_path: The command to execute
+ * @args: The arguments along with the command to be executed
+ * @av: 1d array of the command line arguments given when the program is run
+ * @ev: Environment variables
+ * @cmd_cnt: The current command number
+ *
+ * Return: void
+ */
+void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt)
+{
+	pid_t child_pid;
+
+	child_pid = fork();
+	if (child_pid == -1)
+		exit(2);
+	if (child_pid == 0)
+	{
+		if (execve(c_path, args, ev) == -1)
+		{
+			print_error(av[0], args[0], "execution failed\n", cmd_cnt);
+			exit(2);
+		}
+	}
+	else
+		wait(NULL);
 }
