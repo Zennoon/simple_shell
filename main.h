@@ -34,7 +34,7 @@ void print_error(char *, char *, char *, int);
 void exit_program(char **, size_t);
 int is_interactive(void);
 char *get_env_var(char *);
-int exec_command(char**, char*, char**);
+int exec_command(char**, char*, char**, int);
 int execute_from_file(char**, char**);
 int set_env_var(char *, char *);
 /** built-in funcstions **/

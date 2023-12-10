@@ -109,7 +109,7 @@ int execute_from_file(char **av, char ** ev)
 	lines = parse_lines(buffer, bytes_read, &line_count);
 	for (i = 0; lines[i]; i++)
 	{
-		exec_command(av, lines[i], ev);
+		exec_command(av, lines[i], ev, 0);
 	}
 	return (0);
 }

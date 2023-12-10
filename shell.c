@@ -1,7 +1,6 @@
 #include "main.h"
 
 int command_count = 0;
-int exec_command(char **, char *, char **, int);
 void execute_fork(char *, char **, char **, char **, int);
 /**
  * print_error - prints errno msg to stderr
