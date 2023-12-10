@@ -102,9 +102,7 @@ int main(__attribute__((unused)) int ac, char **av,
 int exec_command(char **av, char *line, char **ev, int cmd_cnt)
 {
 	int i = 0, j;
-	char *c_path;
-	/**pid_t child_pid;**/
-	char **commands;
+	char *c_path, **commands;
 
 	commands = _strtok(line, ";");
 	for (j = 0; commands[j]; j++)
