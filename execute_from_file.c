@@ -16,7 +16,13 @@ char *read_file_content(char *filename, size_t *bytes_read)
 	size_t total_bytes_read = 0;
 
 	if (fd == -1)
-		return (NULL);
+	{
+		char *msg = _strcat(3, "./hsh: 0: Cant't open ", filename, "\n");
+
+		write(2, msg, _strlen(msg));
+		free(msg);
+		exit (127);
+	}
 	if (fstat(fd, &filestat) == -1)
 	{
 		close(fd);
@@ -64,8 +70,8 @@ char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 	while (buffer[i] != '\0')
 	{
 		size_t c_line_length = 0;
-		pos += i;
 
+		pos += i;
 		while (buffer[i] != '\n' && buffer[i] != '\0')
 		{
 			c_line_length++;
@@ -94,7 +100,7 @@ char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
  *
  * Return: execution statis
  */
-int execute_from_file(char **av, char ** ev)
+int execute_from_file(char **av, char **ev)
 {
 	size_t bytes_read;
 	size_t line_count;
@@ -112,7 +118,7 @@ int execute_from_file(char **av, char ** ev)
 	{
 		exec_command(av, lines[i], ev, 0);
 	}
-	for(i = 0; lines[i]; i++)
+	for (i = 0; lines[i]; i++)
 		free(lines[i]);
 	free(lines);
 	return (0);
