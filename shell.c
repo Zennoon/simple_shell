@@ -1,6 +1,7 @@
 #include "main.h"
 
 int exec_command(char **, char *, char **, int);
+void execute_fork(char *, char **, char **, char **, int);
 /**
  * print_error - prints errno msg to stderr
  * @shl_name: Current name of the executable (shell)
@@ -102,7 +103,7 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt)
 {
 	int i = 0, j;
 	char *c_path;
-	pid_t child_pid;
+	/**pid_t child_pid;**/
 	char **commands;
 
 	commands = _strtok(line, ";");
@@ -119,35 +120,54 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt)
 		if (_strchr(args[0], '/') == NULL)
 		{
 			if (is_builtin(args[0]) == 1)
-				return (execute_builtin(args, av, cmd_cnt));
+			{
+				execute_builtin(args, av, cmd_cnt);
+				i++;
+				continue;
+			}
 			c_path = get_path(args[0]);
 		}
 		else
 			c_path = args[0];
-		if (c_path != NULL)
-			child_pid = fork();
-		else
+		if (c_path == NULL)
 		{
 			print_error(av[0], args[0], "not found\n", cmd_cnt);
 			i++;
 			continue;
 		}
-		if (child_pid == -1)
-			return (2);
-		if (child_pid == 0)
-		{
-			if (execve(c_path, args, ev) == -1)
-			{
-				print_error(av[0], args[0],
-					    "execution failed\n", cmd_cnt);
-				return (2);
-			}
-		}
-		else
-			wait(NULL);
+		execute_fork(c_path, args, av, ev, cmd_cnt);
 		free_arr(args);
 		i++;
 	}
 	free_arr(commands);
 	return (0);
+}
+
+/**
+ * execute_fork - Create a child process to execute a command
+ * @c_path: The command to execute
+ * @args: The arguments along with the command to be executed
+ * @av: 1d array of the command line arguments given when the program is run
+ * @ev: Environment variables
+ * @cmd_cnt: The current command number
+ *
+ * Return: void
+ */
+void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt)
+{
+	pid_t child_pid;
+
+	child_pid = fork();
+	if (child_pid == -1)
+		exit(2);
+	if (child_pid == 0)
+	{
+		if (execve(c_path, args, ev) == -1)
+		{
+			print_error(av[0], args[0], "execution failed\n", cmd_cnt);
+			exit(2);
+		}
+	}
+	else
+		wait(NULL);
 }
