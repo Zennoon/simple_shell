@@ -45,3 +45,92 @@ char *read_file_content(char *filename, size_t *bytes_read)
 	*bytes_read = total_bytes_read;
 	return (buffer);
 }
+
+/**
+ * parse_lines - parses buffer and returns array of lines
+ * @buffer: buffer to parse
+ * @bytes_read: size of bufer in bytes
+ * @line_count: variable to store line count
+ *
+ * Return: array of lines
+ */
+char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
+{
+	size_t initial_line_capacity = 16;
+	char **lines = malloc(sizeof(char *) * initial_line_capacity);
+	size_t *line_lengths = malloc(sizeof(size_t) * initial_line_capacity);
+	size_t i = 0;
+
+	if (!lines || !line_lengths)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	*line_count = 0;
+	for (i = 0; i < bytes_read; i++)
+	{
+		if (buffer[i] == '\n')
+		{
+			lines[*line_count] = malloc(line_lengths[*line_count] + 1);
+			if (!lines[*line_count])
+			{
+				size_t j;
+
+				for (j = 0; j < *line_count; j++)
+					free(lines[j]);
+				free(lines);
+				free(line_lengths);
+				free(buffer);
+				return (NULL);
+			}
+			_memcpy(lines[*line_count], buffer, line_lengths[*line_count]);
+			lines[*line_count][line_lengths[*line_count]] = '\0';
+			(*line_count)++;
+			line_lengths[*line_count] = 0;
+			if (*line_count >= initial_line_capacity)
+			{
+				initial_line_capacity *= 2;
+				lines = _realloc(lines, sizeof(lines), sizeof(char *) + initial_line_capacity);
+				line_lengths = _realloc(line_lengths, sizeof(line_lengths), sizeof(size_t) * initial_line_capacity);
+				if (!lines || !line_lengths)
+				{
+					free(buffer);
+					return (NULL);
+				}
+			}
+		}
+		else
+			line_lengths[*line_count]++;
+	}
+	buffer = _realloc(buffer, sizeof(buffer), bytes_read);
+	return (lines);
+}
+/**
+ * exexute_from_file - executes command from file line by line
+ * @av: argument vector
+ * @ev: env
+ *
+ * Return: execution statis
+ */
+int execute_from_file(char **av, char ** ev)
+{
+	size_t bytes_read;
+	size_t line_count;
+	char *buffer;
+	char **lines;
+	int i = 0;
+
+	buffer = read_file_content(av[1], &bytes_read);
+	if (!buffer)
+	{
+		printf("file not found");
+		return (1);
+	}
+	lines = parse_lines(buffer, bytes_read, &line_count);
+	for ( ; lines[i]; i++)
+	{
+		exec_command(av, lines[i], ev);
+	}
+	return (0);
+}
+
