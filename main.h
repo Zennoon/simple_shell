@@ -22,6 +22,7 @@ size_t _strlen(char *);
 char **_strtok(char *, char *);
 char *_strcat(int, ...);
 char *_strcpy(char *, char *);
+char *_memcpy(char *, char *, unsigned int);
 char *num_to_str(unsigned int);
 void *_realloc(void *, unsigned int, unsigned int);
 void free_arr(char **);
@@ -33,6 +34,8 @@ void exit_program(char **, size_t);
 int is_interactive(void);
 char *get_env_var(char *);
 int set_env_var(char *, int, char *);
+int exec_command(char**, char*, char**);
+int execute_from_file(char**, char**);
 /** built-in funcstions **/
 int is_builtin(char *);
 int execute_builtin(char **);

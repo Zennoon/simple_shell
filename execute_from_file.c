@@ -104,8 +104,7 @@ int execute_from_file(char **av, char ** ev)
 	buffer = read_file_content(av[1], &bytes_read);
 	if (!buffer)
 	{
-		printf("file not found");
-		return (1);
+		return (0);
 	}
 	lines = parse_lines(buffer, bytes_read, &line_count);
 	for (i = 0; lines[i]; i++)

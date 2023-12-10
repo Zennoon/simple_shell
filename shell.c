@@ -1,6 +1,5 @@
 #include "main.h"
 
-int exec_command(char **, char *, char **);
 int command_count = 0;
 /**
  * print_error - prints errno msg to stderr
@@ -60,6 +59,8 @@ int main(__attribute__((unused)) int ac, char **av,
 		size_t buff_size = 0;
 		int status = 0, line_size = 0;
 
+		if (av[1])
+			return (execute_from_file(av, ev));
 		print_prompt();
 		line_size = getline(&line_buffer, &buff_size, stdin);
 		if (line_size <= 1)
