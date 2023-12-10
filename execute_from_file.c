@@ -58,51 +58,32 @@ char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 {
 	size_t initial_line_capacity = 16;
 	char **lines = malloc(sizeof(char *) * initial_line_capacity);
-	size_t *line_lengths = malloc(sizeof(size_t) * initial_line_capacity);
-	size_t i = 0;
+	size_t i = 0, pos = 0, j;
 
-	if (!lines || !line_lengths)
-	{
-		free(buffer);
-		return (NULL);
-	}
 	*line_count = 0;
-	for (i = 0; i < bytes_read; i++)
+	while (buffer[i] != '\0')
 	{
-		if (buffer[i] == '\n')
-		{
-			lines[*line_count] = malloc(line_lengths[*line_count] + 1);
-			if (!lines[*line_count])
-			{
-				size_t j;
+		size_t c_line_length = 0;
+		pos += i;
 
-				for (j = 0; j < *line_count; j++)
-					free(lines[j]);
-				free(lines);
-				free(line_lengths);
-				free(buffer);
-				return (NULL);
-			}
-			_memcpy(lines[*line_count], buffer, line_lengths[*line_count]);
-			lines[*line_count][line_lengths[*line_count]] = '\0';
-			(*line_count)++;
-			line_lengths[*line_count] = 0;
-			if (*line_count >= initial_line_capacity)
-			{
-				initial_line_capacity *= 2;
-				lines = _realloc(lines, sizeof(lines), sizeof(char *) + initial_line_capacity);
-				line_lengths = _realloc(line_lengths, sizeof(line_lengths), sizeof(size_t) * initial_line_capacity);
-				if (!lines || !line_lengths)
-				{
-					free(buffer);
-					return (NULL);
-				}
-			}
+		while (buffer[i] != '\n' && buffer[i] != '\0')
+		{
+			c_line_length++;
+			i++;
 		}
-		else
-			line_lengths[*line_count]++;
+		lines[*line_count] = malloc(c_line_length + 1);
+		if (!lines[*line_count])
+		{
+			for (j = 0; j < *line_count; j++)
+				free(lines[j]);
+			free(lines);
+			return (NULL);
+		}
+		_memcpy(lines[*line_count], buffer + pos, c_line_length);
+		lines[*line_count][c_line_length] = '\0';
+		(*line_count)++;
+		i++;
 	}
-	buffer = _realloc(buffer, sizeof(buffer), bytes_read);
 	return (lines);
 }
 /**
@@ -118,7 +99,7 @@ int execute_from_file(char **av, char ** ev)
 	size_t line_count;
 	char *buffer;
 	char **lines;
-	int i = 0;
+	int i;
 
 	buffer = read_file_content(av[1], &bytes_read);
 	if (!buffer)
@@ -127,7 +108,7 @@ int execute_from_file(char **av, char ** ev)
 		return (1);
 	}
 	lines = parse_lines(buffer, bytes_read, &line_count);
-	for ( ; lines[i]; i++)
+	for (i = 0; lines[i]; i++)
 	{
 		exec_command(av, lines[i], ev);
 	}
