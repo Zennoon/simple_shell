@@ -19,6 +19,7 @@ void print_error(char *shl_name, char *cmd, char *msg, int command_count)
 	err = _strcat(7, shl_name, ": ", cc, ": ", cmd, ": ", msg);
 	write(2, err, _strlen(err));
 	free(err);
+	free(cc);
 }
 /**
  * get_path - gets full path of a command if it is not a path
@@ -36,7 +37,10 @@ char *get_path(char *command)
 	{
 		c_path = command_path(paths, command);
 		if (c_path == NULL)
+		{
+			free_arr(paths);
 			return (NULL);
+		}
 	}
 	else
 		c_path = command;
@@ -83,6 +87,7 @@ int main(__attribute__((unused)) int ac, char **av,
 			exit_program(&line_buffer, line_size);
 		++command_count;
 		status = exec_command(av, line_buffer, ev, command_count, &stat);
+		free(line_buffer);
 		status = status;
 		if (!is_interactive())
 			break;
@@ -141,14 +146,16 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt, int *status)
 			*status = 127;
 			print_error(av[0], args[0], "not found\n", cmd_cnt);
 			i++;
+			free_arr(args);
 			continue;
 		}
 		execute_fork(c_path, args, av, ev, cmd_cnt, status);
 		free_arr(args);
+		free(c_path);
 		i++;
 	}
 	free_arr(commands);
-	free(uncommented);
+	free_arr(uncommented);
 	return (0);
 }
 

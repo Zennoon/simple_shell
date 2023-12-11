@@ -23,9 +23,11 @@ char **get_paths(void)
 			if (path == NULL)
 				return (NULL);
 			paths = _strtok(path, ":");
+			free_arr(key);
 			return (paths);
 		}
-		free_arr(key);
+		else
+			free_arr(key);
 	}
 
 	return (NULL);
