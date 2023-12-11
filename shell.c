@@ -104,17 +104,23 @@ int main(__attribute__((unused)) int ac, char **av,
 int exec_command(char **av, char *line, char **ev, int cmd_cnt)
 {
 	int i = 0, j;
-	char *c_path, **commands;
+	char *c_path, **uncommented, **commands;
 
-	commands = _strtok(line, ";");
+	if (line[0] == '#')
+		return (0);
+	uncommented = _strtok(line, "#");
+	commands = _strtok(uncommented[0], ";");
 	for (j = 0; commands[j]; j++)
 		;
 	while (i < j)
 	{
-		char **args = _strtok(commands[i], " \t");
+		char **args = _strtok(commands[i], " /t");
 
-		if (args[0][0] == '#')
-			break;
+		if (args[0] == NULL)
+		{
+			i++;
+			continue;
+		}
 		if (!_strcmp(args[0], "exit"))
 			exit_program(args, i);
 		if (_strchr(args[0], '/') == NULL)
@@ -140,6 +146,7 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt)
 		i++;
 	}
 	free_arr(commands);
+	free(uncommented);
 	return (0);
 }
 
