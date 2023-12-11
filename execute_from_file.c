@@ -1,4 +1,5 @@
 #include "main.h"
+#include <string.h>
 
 /**
  * read_file_content - reads files content in to a buffer
@@ -71,7 +72,7 @@ char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 	{
 		size_t c_line_length = 0;
 
-		pos += i;
+		pos = i;
 		while (buffer[i] != '\n' && buffer[i] != '\0')
 		{
 			c_line_length++;
@@ -85,7 +86,7 @@ char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 			free(lines);
 			return (NULL);
 		}
-		_memcpy(lines[*line_count], buffer + pos, c_line_length);
+		memcpy(lines[*line_count], buffer + pos, c_line_length);
 		lines[*line_count][c_line_length] = '\0';
 		(*line_count)++;
 		i++;
