@@ -1,7 +1,7 @@
 #include "main.h"
 
 int command_count = 0;
-void execute_fork(char *, char **, char **, char **, int);
+void execute_fork(char *, char **, char **, char **, int, int *);
 /**
  * print_error - prints errno msg to stderr
  * @shl_name: Current name of the executable (shell)
@@ -55,7 +55,7 @@ char *get_path(char *command)
 int main(__attribute__((unused)) int ac, char **av,
 	 char **ev)
 {
-	int command_count = 0;
+	int command_count = 0, stat = 0;
 
 	while (1)
 	{
@@ -82,7 +82,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		if ((int) line_size == -1)
 			exit_program(&line_buffer, line_size);
 		++command_count;
-		status = exec_command(av, line_buffer, ev, command_count);
+		status = exec_command(av, line_buffer, ev, command_count, &stat);
 		status = status;
 		if (!is_interactive())
 			break;
@@ -101,7 +101,7 @@ int main(__attribute__((unused)) int ac, char **av,
  * 2 -> command excution failed
  */
 
-int exec_command(char **av, char *line, char **ev, int cmd_cnt)
+int exec_command(char **av, char *line, char **ev, int cmd_cnt, int *status)
 {
 	int i = 0, j;
 	char *c_path, **uncommented, **commands;
@@ -114,8 +114,9 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt)
 		;
 	while (i < j)
 	{
-		char **args = _strtok(commands[i], " /t");
+		char **args = _strtok(commands[i], " \t");
 
+		args = replace_variables(args, *status);
 		if (args[0] == NULL)
 		{
 			i++;
@@ -137,11 +138,12 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt)
 			c_path = args[0];
 		if (c_path == NULL)
 		{
+			*status = 127;
 			print_error(av[0], args[0], "not found\n", cmd_cnt);
 			i++;
 			continue;
 		}
-		execute_fork(c_path, args, av, ev, cmd_cnt);
+		execute_fork(c_path, args, av, ev, cmd_cnt, status);
 		free_arr(args);
 		i++;
 	}
@@ -160,21 +162,30 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt)
  *
  * Return: void
  */
-void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt)
+void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt,
+	int *status)
 {
 	pid_t child_pid;
 
 	child_pid = fork();
 	if (child_pid == -1)
+	{
+		*status = 2;
 		exit(2);
+	}
 	if (child_pid == 0)
 	{
 		if (execve(c_path, args, ev) == -1)
 		{
-			print_error(av[0], args[0], "execution failed\n", cmd_cnt);
+			*status = 2;
+			print_error(av[0], args[0], "execution failed\n",
+				    cmd_cnt);
 			exit(2);
 		}
 	}
 	else
+	{
+		*status = 0;
 		wait(NULL);
+	}
 }

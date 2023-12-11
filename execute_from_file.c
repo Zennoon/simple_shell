@@ -117,7 +117,7 @@ int execute_from_file(char **av, char **ev)
 	size_t line_count;
 	char *buffer;
 	char **lines;
-	int i;
+	int i, status = 0;
 
 	buffer = read_file_content(av[1], &bytes_read);
 	if (!buffer)
@@ -127,7 +127,7 @@ int execute_from_file(char **av, char **ev)
 	lines = parse_lines(buffer, bytes_read, &line_count);
 	for (i = 0; lines[i]; i++)
 	{
-		exec_command(av, lines[i], ev, 0);
+		exec_command(av, lines[i], ev, 0, &status);
 	}
 	for (i = 0; lines[i]; i++)
 		free(lines[i]);
