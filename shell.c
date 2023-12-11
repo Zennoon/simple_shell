@@ -13,7 +13,7 @@ void execute_fork(char *, char **, char **, char **, int, int *);
  */
 void print_error(char *shl_name, char *cmd, char *msg, int command_count)
 {
-	char *cc = num_to_str(command_count);
+	char *cc = n_to_s(command_count);
 	char *err;
 
 	err = _strcat(7, shl_name, ": ", cc, ": ", cmd, ": ", msg);
