@@ -34,12 +34,12 @@ char *read_file_content(char *filename, size_t *bytes_read)
 		close(fd);
 		return (NULL);
 	}
-	while (total_bytes_read < filestat.st_size)
+	while ((long int) total_bytes_read < filestat.st_size)
 	{
 		size_t new_read_bytes = read(fd, buffer + total_bytes_read,
 				filestat.st_size - total_bytes_read);
 
-		if (new_read_bytes == -1)
+		if ((int) new_read_bytes == -1)
 		{
 			free(buffer);
 			close(fd);
@@ -62,7 +62,7 @@ char *read_file_content(char *filename, size_t *bytes_read)
  */
 char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 {
-	size_t initial_line_capacity = 16;
+	/**size_t initial_line_capacity = 16;
 	char **lines = malloc(sizeof(char *) * initial_line_capacity);
 	size_t i = 0, pos = 0, j;
 
@@ -87,6 +87,16 @@ char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 		}
 		_memcpy(lines[*line_count], buffer + pos, c_line_length);
 		lines[*line_count][c_line_length] = '\0';
+		(*line_count)++;
+		i++;
+	}
+	**/
+	char **lines = _strtok(buffer, "\n\0");
+	int i = 0;
+
+	bytes_read = bytes_read;
+	while (lines[i])
+	{
 		(*line_count)++;
 		i++;
 	}
@@ -123,4 +133,3 @@ int execute_from_file(char **av, char **ev)
 	free(lines);
 	return (0);
 }
-
