@@ -89,3 +89,36 @@ char *_memcpy(char *dest, char *src, unsigned int n)
 	}
 	return (dest);
 }
+
+/**
+ * n_to_s - Convert a number to a string
+ * @n: The number to convert
+ *
+ * Return: A string
+ */
+char *n_to_s(unsigned int num)
+{
+	unsigned int len = 1, i = 0;
+        unsigned int tmp = num;
+        char *str;
+
+        while (tmp / 10)
+        {
+                len++;
+                tmp /= 10;
+        }
+        str = malloc(len + 1);
+        len--;
+        while (len >= 1)
+        {
+                int n = num / pow_ten(len);
+
+                str[i] = n + '0';
+                num -= n * pow_ten(len);
+                i++;
+                len--;
+        }
+        str[i] = (num % 10) + '0';
+        str[i + 1] = '\0';
+        return (str);
+}

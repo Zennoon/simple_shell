@@ -96,7 +96,7 @@ int _setenv(char **args, char **av, int cmd_no)
 	{
 		char *msg = _strcat(3, "can't set the variable ", args[1], "\n");
 
-		printf(av[0], args[0], msg, cmd_no);
+		print_error(av[0], args[0], msg, cmd_no);
 		free(msg);
 		return (-1);
 	}
