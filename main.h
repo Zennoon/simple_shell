@@ -58,4 +58,15 @@ typedef struct built_in
 	char *name;
 	int (*func)(char **, char **, int);
 } built_in;
+
+/**
+ * struct alias - A struct representing an alias
+ * @name: the alias name
+ * @cmd: the command being aliased
+ */
+typedef struct alias
+{
+	char *name;
+	char *cmd;
+} alias;
 #endif
