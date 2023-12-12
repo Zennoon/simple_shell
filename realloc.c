@@ -97,3 +97,17 @@ void free_strs(int n, ...)
 		i++;
 	}
 }
+
+/**
+ * free_if_malloced - Frees the command path used to execute a command if it
+ * has been malloced
+ * @c_path: The command path
+ * @arg: The actual command retrieved from stdin
+ *
+ * Return: void
+ */
+void free_if_malloced(char *c_path, char *arg)
+{
+	if (_strchr(arg, '/') == NULL)
+		free(c_path);
+}

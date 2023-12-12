@@ -28,6 +28,7 @@ char *n_to_s(unsigned int);
 void *_realloc(void *, unsigned int, unsigned int);
 void free_arr(char **);
 void free_strs(int, ...);
+void free_if_malloced(char *, char *);
 char **get_paths(void);
 char *command_path(char **, char *);
 void print_prompt(void);

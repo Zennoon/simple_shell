@@ -150,8 +150,8 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt, int *status)
 			continue;
 		}
 		execute_fork(c_path, args, av, ev, cmd_cnt, status);
+		free_if_malloced(c_path, args[0]);
 		free_arr(args);
-		free(c_path);
 		i++;
 	}
 	free_arr(commands);
