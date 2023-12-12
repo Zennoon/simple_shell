@@ -1,6 +1,5 @@
 #include "main.h"
 
-int command_count = 0;
 void execute_fork(char *, char **, char **, char **, int, int *);
 /**
  * print_error - prints errno msg to stderr
@@ -13,7 +12,7 @@ void execute_fork(char *, char **, char **, char **, int, int *);
  */
 void print_error(char *shl_name, char *cmd, char *msg, int command_count)
 {
-	char *cc = n_to_s(command_count);
+	char *cc = num_to_str(command_count);
 	char *err;
 
 	err = _strcat(7, shl_name, ": ", cc, ": ", cmd, ": ", msg);
@@ -101,6 +100,7 @@ int main(__attribute__((unused)) int ac, char **av,
  * @line: Buffer containing the data read from stdin
  * @ev: environment
  * @cmd_cnt: The current command number
+ * @status: The exit status of the last executed command
  *
  * Return: status - 0 -> success, 1-> command not found
  * 2 -> command excution failed
@@ -108,91 +108,15 @@ int main(__attribute__((unused)) int ac, char **av,
 
 int exec_command(char **av, char *line, char **ev, int cmd_cnt, int *status)
 {
-	int i = 0, j;
-	char *c_path, **uncommented, **commands;
+	/**int i = 0, j;**/
+	char **uncommented, **commands;
 
 	if (line[0] == '#')
 		return (0);
 	uncommented = _strtok(line, "#");
 	commands = _strtok(uncommented[0], ";");
-	for (j = 0; commands[j]; j++)
-		;
-	while (i < j)
-	{
-		char **args = _strtok(commands[i], " \t");
-
-		args = replace_variables(args, *status);
-		if (args[0] == NULL)
-		{
-			i++;
-			continue;
-		}
-		if (!_strcmp(args[0], "exit"))
-			exit_program(args, i);
-		if (_strchr(args[0], '/') == NULL)
-		{
-			if (is_builtin(args[0]) == 1)
-			{
-				execute_builtin(args, av, cmd_cnt);
-				i++;
-				continue;
-			}
-			c_path = get_path(args[0]);
-		}
-		else
-			c_path = args[0];
-		if (c_path == NULL)
-		{
-			*status = 127;
-			print_error(av[0], args[0], "not found\n", cmd_cnt);
-			i++;
-			free_arr(args);
-			continue;
-		}
-		execute_fork(c_path, args, av, ev, cmd_cnt, status);
-		free_if_malloced(c_path, args[0]);
-		free_arr(args);
-		i++;
-	}
+	exec_line_commands(commands, av, ev, cmd_cnt, status);
 	free_arr(commands);
 	free_arr(uncommented);
 	return (0);
-}
-
-/**
- * execute_fork - Create a child process to execute a command
- * @c_path: The command to execute
- * @args: The arguments along with the command to be executed
- * @av: 1d array of the command line arguments given when the program is run
- * @ev: Environment variables
- * @cmd_cnt: The current command number
- *
- * Return: void
- */
-void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt,
-	int *status)
-{
-	pid_t child_pid;
-
-	child_pid = fork();
-	if (child_pid == -1)
-	{
-		*status = 2;
-		exit(2);
-	}
-	if (child_pid == 0)
-	{
-		if (execve(c_path, args, ev) == -1)
-		{
-			*status = 2;
-			print_error(av[0], args[0], "execution failed\n",
-				    cmd_cnt);
-			exit(2);
-		}
-	}
-	else
-	{
-		*status = 0;
-		wait(NULL);
-	}
 }

@@ -20,12 +20,12 @@ char **replace_variables(char **args, int status)
 				pid_t process_id = getpid();
 
 				free(args[i]);
-				args[i] = _strcat(1, n_to_s(process_id));
+				args[i] = _strcat(1, num_to_str(process_id));
 			}
 			else if (!_strcmp(args[i], "$?"))
 			{
 				free(args[i]);
-				args[i] = _strcat(1, n_to_s(status));
+				args[i] = _strcat(1, num_to_str(status));
 			}
 			else
 			{
