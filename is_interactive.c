@@ -7,7 +7,7 @@
  */
 int is_interactive(void)
 {
-	char *shlvl;
+	char *shlvl = "";
 	int i = 0;
 
 	while (environ && environ[i])
