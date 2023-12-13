@@ -74,7 +74,6 @@ int main(__attribute__((unused)) int ac, char **av,
 			if (line_size == -1)
 			{
 				write(STDOUT_FILENO, "\n", 1);
-				free(line_buffer);
 				break;
 			}
 			free(line_buffer);
@@ -85,19 +84,19 @@ int main(__attribute__((unused)) int ac, char **av,
 		if ((int) line_size == -1)
 			exit_program(&line_buffer, line_size);
 		++command_count;
-		status = exec_command(av, line_buffer, environ, command_count, &stat);
+		status = exec_command(av, line_buffer, ev, command_count, &stat);
 		free(line_buffer);
 		status = status;
 		if (!is_interactive())
 			break;
 	}
-	return (stat);
+	return (0);
 }
 
 /**
  * exec_command - excutes built-in and system commands
  * @av: array containing command and args
- * @line: Buffer containing the data read from stdin
+;0;1;256;1_ * @line: Buffer containing the data read from stdin
  * @ev: environment
  * @cmd_cnt: The current command number
  * @status: The exit status of the last executed command
