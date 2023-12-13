@@ -67,10 +67,7 @@ int main(__attribute__((unused)) int ac, char **av,
 
 		if (av[1])
 			return (execute_from_file(av, ev));
-		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
-			line_size = getline_multi(&line_buffer, &buff_size);
-		else
-			line_size = getline(&line_buffer, &buff_size, stdin);
+		line_size = getline(&line_buffer, &buff_size, stdin);
 		if (line_size <= 1)
 		{
 			if (line_size == -1)
