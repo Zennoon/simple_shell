@@ -24,23 +24,26 @@ char *_strcat(int, ...);
 char *_strcpy(char *, char *);
 char *_memcpy(char *, char *, unsigned int);
 char *num_to_str(unsigned int);
-char *n_to_s(unsigned int);
 void *_realloc(void *, unsigned int, unsigned int);
 void free_arr(char **);
 void free_strs(int, ...);
 void free_if_malloced(char *, char *);
 char **get_paths(void);
 char *command_path(char **, char *);
+char *get_path(char *);
 void print_prompt(void);
 void print_error(char *, char *, char *, int);
 void exit_program(char **, size_t);
 int is_interactive(void);
 char *get_env_var(char *);
-int exec_command(char**, char*, char**, int, int *);
-int execute_from_file(char**, char**);
 int set_env_var(char *, char *);
 char **replace_variables(char **, int);
-/** built-in funcstions **/
+/** command  execution **/
+void exec_line_commands(char **, char **, char **, int, int *);
+int exec_command(char **, char *, char **, int, int *);
+void execute_fork(char *, char **, char **, char **, int, int *);
+int execute_from_file(char **, char **);
+/** built-in functions **/
 int is_builtin(char *);
 int execute_builtin(char **, char **, int);
 int _cd(char **, char **, int);

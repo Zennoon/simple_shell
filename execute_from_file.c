@@ -4,7 +4,7 @@
 /**
  * read_file_content - reads files content in to a buffer
  * @filename: name of file
- * @bytes-read: pointer to a variable to store total bytes
+ * @bytes_read: pointer to a variable to store total bytes
  * read
  *
  * Return: buffer containing file content
@@ -18,11 +18,11 @@ char *read_file_content(char *filename, size_t *bytes_read)
 
 	if (fd == -1)
 	{
-		char *msg = _strcat(3, "./hsh: 0: Cant't open ", filename, "\n");
+		char *m = _strcat(3, "./hsh: 0: cant't open ", filename, "\n");
 
-		write(2, msg, _strlen(msg));
-		free(msg);
-		exit (127);
+		write(2, m, _strlen(m));
+		free(m);
+		exit(127);
 	}
 	if (fstat(fd, &filestat) == -1)
 	{
@@ -63,35 +63,6 @@ char *read_file_content(char *filename, size_t *bytes_read)
  */
 char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 {
-	/**size_t initial_line_capacity = 16;
-	char **lines = malloc(sizeof(char *) * initial_line_capacity);
-	size_t i = 0, pos = 0, j;
-
-	*line_count = 0;
-	while (buffer[i] != '\0')
-	{
-		size_t c_line_length = 0;
-
-		pos = i;
-		while (buffer[i] != '\n' && buffer[i] != '\0')
-		{
-			c_line_length++;
-			i++;
-		}
-		lines[*line_count] = malloc(c_line_length + 1);
-		if (!lines[*line_count])
-		{
-			for (j = 0; j < *line_count; j++)
-				free(lines[j]);
-			free(lines);
-			return (NULL);
-		}
-		memcpy(lines[*line_count], buffer + pos, c_line_length);
-		lines[*line_count][c_line_length] = '\0';
-		(*line_count)++;
-		i++;
-	}
-	**/
 	char **lines = _strtok(buffer, "\n\0");
 	int i = 0;
 
