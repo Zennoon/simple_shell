@@ -9,7 +9,7 @@
 int is_builtin(char *cmd)
 {
 	int i = 0;
-	char *commands[] = {"env", "cd", "setenv", "unsetenv", "alias"};
+	char *commands[] = {"env", "cd", "setenv", "unsetenv"};
 
 	while (i < 4)
 	{
@@ -38,8 +38,7 @@ int execute_builtin(char **args, char **av, int cmd_no)
 		{"env", _env},
 		{"cd", _cd},
 		{"setenv", _setenv},
-		{"unsetenv", _unsetenv},
-		{"alias", _alias}
+		{"unsetenv", _unsetenv}
 	};
 
 	while (i < 4)

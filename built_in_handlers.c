@@ -149,38 +149,3 @@ int _unsetenv(char **args, char **av, int cmd_no)
 	}
 	return (0);
 }
-
-/**
- * _alias- creates an alias for a command and lists aliases
- * @args: Arguments given along with the command
- * @av: 1d array of the command line arguments given when the program is
- * executed
- * @cmd_no: The current command number
- *
- * Return: 0 if successful, -1 otherwise
- */
-int _alias(char **args, char **av, int cmd_no)
-{
-	int i, j;
-	alias *aliases;
-
-	av[0] = av[0];
-	for (i = 0; args[i]; i++)
-		;
-	if (i == 1)
-	{
-		list_aliases(aliases);
-		return (1);
-	}
-	if (i >= 2)
-	{
-		for (j = 1; args[j]; j++)
-		{
-			if (_strchr(args[j]), '=')
-				return (set_alias(args[j], aliases));
-			else
-				return (print_alias(args[j], aliases));
-		}
-	}
-	return (-1);
-}
