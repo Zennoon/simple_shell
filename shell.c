@@ -88,7 +88,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		status = exec_command(av, line_buffer, environ, command_count, &stat);
 		free(line_buffer);
 		status = status;
-		if (!is_interactive())
+		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 			break;
 	}
 	return (stat);
