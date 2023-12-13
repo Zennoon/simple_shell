@@ -75,6 +75,7 @@ int main(__attribute__((unused)) int ac, char **av,
 			if (line_size == -1)
 			{
 				write(1, "\n", 1);
+				free(line_buffer);
 				break;
 			}
 			free(line_buffer);
