@@ -86,13 +86,13 @@ int main(__attribute__((unused)) int ac, char **av,
 		if ((int) line_size == -1)
 			exit_program(&line_buffer, line_size);
 		++command_count;
-		status = exec_command(av, line_buffer, ev, command_count, &stat);
+		status = exec_command(av, line_buffer, environ, command_count, &stat);
 		free(line_buffer);
 		status = status;
 		if (!is_interactive())
 			break;
 	}
-	return (0);
+	return (stat);
 }
 
 /**
