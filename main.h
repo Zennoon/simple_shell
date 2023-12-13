@@ -31,6 +31,7 @@ void free_if_malloced(char *, char *);
 char **get_paths(void);
 char *command_path(char **, char *);
 char *get_path(char *);
+int getline_multi(char **, size_t *);
 void print_prompt(void);
 void print_error(char *, char *, char *, int);
 void exit_program(char **, size_t);
