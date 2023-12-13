@@ -67,7 +67,7 @@ int main(__attribute__((unused)) int ac, char **av,
 
 		if (av[1])
 			return (execute_from_file(av, ev));
-		print_prompt();
+		/**print_prompt();**/
 		line_size = getline(&line_buffer, &buff_size, stdin);
 		if (line_size <= 1)
 		{
