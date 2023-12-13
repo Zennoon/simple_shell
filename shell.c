@@ -1,6 +1,5 @@
 #include "main.h"
 
-void execute_fork(char *, char **, char **, char **, int, int *);
 /**
  * print_error - prints errno msg to stderr
  * @shl_name: Current name of the executable (shell)
@@ -16,7 +15,7 @@ void print_error(char *shl_name, char *cmd, char *msg, int command_count)
 	char *err;
 
 	err = _strcat(7, shl_name, ": ", cc, ": ", cmd, ": ", msg);
-	write(2, err, _strlen(err));
+	write(STDERR_FILENO, err, _strlen(err));
 	free(err);
 	free(cc);
 }
@@ -74,7 +73,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		{
 			if (line_size == -1)
 			{
-				write(1, "\n", 1);
+				write(STDOUT_FILENO, "\n", 1);
 				break;
 			}
 			free(line_buffer);

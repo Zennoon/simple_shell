@@ -20,7 +20,7 @@ char *read_file_content(char *filename, size_t *bytes_read)
 	{
 		char *m = _strcat(3, "./hsh: 0: cant't open ", filename, "\n");
 
-		write(2, m, _strlen(m));
+		write(STDERR_FILENO, m, _strlen(m));
 		free(m);
 		exit(127);
 	}

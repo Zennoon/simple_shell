@@ -11,7 +11,7 @@ void exit_program(char **buff_arr, size_t buff_size)
 {
 	if ((int) buff_size == -1)
 	{
-		write(1, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 		exit(0);
 	}
 	if (buff_arr[1] != NULL)

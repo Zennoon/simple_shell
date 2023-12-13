@@ -32,8 +32,8 @@ int _cd(char **args, char **av, int cmd_no)
 		set_env_var("OLDPWD", old_buff);
 		if (args[1] != NULL && !_strcmp(args[1], "-"))
 		{
-			write(1, dir, _strlen(dir));
-			write(1, "\n", 1);
+			write(STDOUT_FILENO, dir, _strlen(dir));
+			write(STDOUT_FILENO, "\n", 1);
 		}
 	}
 	else
@@ -71,7 +71,7 @@ int _env(char **args, char **av, int cmd_no)
 	while (ptr != NULL && *ptr != NULL)
 	{
 		str = _strcat(2, *ptr, "\n");
-		write(1, str, _strlen(str));
+		write(STDOUT_FILENO, str, _strlen(str));
 		free(str);
 		ptr++;
 	}
