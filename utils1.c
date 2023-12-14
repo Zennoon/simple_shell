@@ -113,6 +113,8 @@ int getline_multi(char **line_buffer, size_t *buff_size)
 			buffer = _strcat(2, buffer, *line_buffer);
 			free(ptr);
 		}
+		else
+			free(*line_buffer);
 	}
 	*line_buffer = buffer;
 	return (*buff_size);

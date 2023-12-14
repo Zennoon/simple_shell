@@ -12,7 +12,7 @@
  * Return: void
  */
 void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt,
-		  int *status)
+		  int *status, char **commands)
 {
 	pid_t child_pid;
 
@@ -29,6 +29,8 @@ void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt,
 			*status = 2;
 			print_error(av[0], args[0], "execution failed\n",
 				    cmd_cnt);
+			free_arr(commands);
+			free_arr(args);
 			exit(2);
 		}
 	}
@@ -92,7 +94,7 @@ void exec_line_commands(char **commands, char **av, char **ev, int cmd_cnt,
 			free_arr(args);
 			continue;
 		}
-		execute_fork(c_path, args, av, ev, cmd_cnt, status);
+		execute_fork(c_path, args, av, ev, cmd_cnt, status, commands);
 		free_if_malloced(c_path, args[0]);
 		free_arr(args);
 		i++;

@@ -42,7 +42,7 @@ char **replace_variables(char **, int);
 /** command  execution **/
 void exec_line_commands(char **, char **, char **, int, int *);
 int exec_command(char **, char *, char **, int, int *);
-void execute_fork(char *, char **, char **, char **, int, int *);
+void execute_fork(char *, char **, char **, char **, int, int *, char **);
 int execute_from_file(char **, char **);
 /** built-in functions **/
 int is_builtin(char *);
