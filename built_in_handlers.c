@@ -75,6 +75,7 @@ int _env(char **args, char **av, int cmd_no)
 		free(str);
 		ptr++;
 	}
+	free_arr(args);
 	return (0);
 }
 
