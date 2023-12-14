@@ -67,7 +67,6 @@ int main(__attribute__((unused)) int ac, char **av,
 
 		if (av[1])
 			return (execute_from_file(av, ev));
-		/**print_prompt();**/
 		line_size = getline(&line_buffer, &buff_size, stdin);
 		if (line_size <= 1)
 		{
@@ -80,7 +79,6 @@ int main(__attribute__((unused)) int ac, char **av,
 			free(line_buffer);
 			continue;
 		}
-		line_buffer[line_size - 1] = '\0';
 		/**buff_arr = _strtok(line_buffer, " \t");**/
 		if ((int) line_size == -1)
 			exit_program(&line_buffer, line_size);
@@ -114,7 +112,7 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt, int *status)
 	if (line[0] == '#')
 		return (0);
 	uncommented = _strtok(line, "#");
-	commands = _strtok(uncommented[0], ";");
+	commands = _strtok(uncommented[0], ";\n");
 	exec_line_commands(commands, av, ev, cmd_cnt, status);
 	free_arr(commands);
 	free_arr(uncommented);

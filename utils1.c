@@ -89,3 +89,31 @@ char *_memcpy(char *dest, char *src, unsigned int n)
 	}
 	return (dest);
 }
+
+/**
+ * getline_multi - Extension of getline function for multiple lines
+ * @line_buffer: Pointer to the mem area where the input is stored
+ * @buff_size: Pointer to an int holding the size allocated to line_buffer
+ *
+ * Return: buff_size
+ */
+int getline_multi(char **line_buffer, size_t *buff_size)
+{
+	char *buffer = malloc(1);
+	int line_size = 0;
+
+	buffer[0] = '\0';
+	while (line_size >= 0)
+	{
+		line_size = getline(line_buffer, buff_size, stdin);
+		if (line_size >= 0)
+		{
+			char *ptr = buffer;
+
+			buffer = _strcat(2, buffer, *line_buffer);
+			free(ptr);
+		}
+	}
+	*line_buffer = buffer;
+	return (*buff_size);
+}
