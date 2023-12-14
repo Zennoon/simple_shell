@@ -64,6 +64,7 @@ void exec_line_commands(char **commands, char **av, char **ev, int cmd_cnt,
 		if (args[0] == NULL)
 		{
 			i++;
+			free_arr(args);
 			continue;
 		}
 		if (!_strcmp(args[0], "exit"))
