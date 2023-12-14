@@ -73,7 +73,7 @@ int main(__attribute__((unused)) int ac, char **av,
 			++command_count;
 			status = exec_command(av, line_buffer, environ,
 					      command_count, &stat);
-			exit(0);
+			break;
 		}
 		line_size = getline(&line_buffer, &buff_size, stdin);
 		if (line_size <= 1)
