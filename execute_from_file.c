@@ -18,7 +18,7 @@ char *read_file_content(char *filename, size_t *bytes_read)
 
 	if (fd == -1)
 	{
-		char *m = _strcat(3, "./hsh: 0: cant't open ", filename, "\n");
+		char *m = _strcat(3, "./hsh: 0: Can't open ", filename, "\n");
 
 		write(STDERR_FILENO, m, _strlen(m));
 		free(m);
@@ -48,6 +48,7 @@ char *read_file_content(char *filename, size_t *bytes_read)
 		}
 		total_bytes_read += new_read_bytes;
 	}
+	buffer[total_bytes_read] = '\0';
 	close(fd);
 	*bytes_read = total_bytes_read;
 	return (buffer);
@@ -61,12 +62,11 @@ char *read_file_content(char *filename, size_t *bytes_read)
  *
  * Return: array of lines
  */
-char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
+char **parse_lines(char *buffer, size_t *line_count)
 {
 	char **lines = _strtok(buffer, "\n\0");
 	int i = 0;
 
-	bytes_read = bytes_read;
 	while (lines[i])
 	{
 		(*line_count)++;
@@ -85,7 +85,7 @@ char **parse_lines(char *buffer, size_t bytes_read, size_t *line_count)
 int execute_from_file(char **av, char **ev)
 {
 	size_t bytes_read;
-	size_t line_count;
+	size_t line_count = 0;
 	char *buffer;
 	char **lines;
 	int i, status = 0;
@@ -95,13 +95,14 @@ int execute_from_file(char **av, char **ev)
 	{
 		return (0);
 	}
-	lines = parse_lines(buffer, bytes_read, &line_count);
+	lines = parse_lines(buffer, &line_count);
 	for (i = 0; lines[i]; i++)
 	{
 		exec_command(av, lines[i], ev, 0, &status);
 	}
-	for (i = 0; lines[i]; i++)
-		free(lines[i]);
+	//for (i = 0; lines[i]; i++)
+	//	free(lines[i]);
 	free(lines);
+	//free(lines);
 	return (0);
 }
