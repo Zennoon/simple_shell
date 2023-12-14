@@ -67,6 +67,15 @@ int main(__attribute__((unused)) int ac, char **av,
 
 		if (av[1])
 			return (execute_from_file(av, ev));
+		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
+		{
+			line_size = getline_multi(&line_buffer, &buff_size);
+			++command_count;
+			status = exec_command(av, line_buffer, environ,
+					      command_count, &stat);
+			free(line_buffer);
+			break;
+		}
 		line_size = getline(&line_buffer, &buff_size, stdin);
 		if (line_size <= 1)
 		{
@@ -84,7 +93,6 @@ int main(__attribute__((unused)) int ac, char **av,
 			exit_program(&line_buffer, line_size);
 		++command_count;
 		status = exec_command(av, line_buffer, environ, command_count, &stat);
-		free(line_buffer);
 		status = status;
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 			break;
@@ -112,9 +120,10 @@ int exec_command(char **av, char *line, char **ev, int cmd_cnt, int *status)
 	if (line[0] == '#')
 		return (0);
 	uncommented = _strtok(line, "#");
+	free(line);
 	commands = _strtok(uncommented[0], ";\n");
+	free_arr(uncommented);
 	exec_line_commands(commands, av, ev, cmd_cnt, status);
 	free_arr(commands);
-	free_arr(uncommented);
 	return (0);
 }

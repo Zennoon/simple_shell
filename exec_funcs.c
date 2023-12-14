@@ -67,7 +67,10 @@ void exec_line_commands(char **commands, char **av, char **ev, int cmd_cnt,
 			continue;
 		}
 		if (!_strcmp(args[0], "exit"))
+		{
+			free_arr(commands);
 			exit_program(args, i);
+		}
 		if (_strchr(args[0], '/') == NULL)
 		{
 			if (is_builtin(args[0]) == 1)

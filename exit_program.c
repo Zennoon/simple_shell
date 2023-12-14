@@ -11,6 +11,7 @@ void exit_program(char **buff_arr, size_t buff_size)
 {
 	if ((int) buff_size == -1)
 	{
+		free_arr(buff_arr);
 		write(STDOUT_FILENO, "\n", 1);
 		exit(0);
 	}
@@ -24,7 +25,9 @@ void exit_program(char **buff_arr, size_t buff_size)
 			status = (status * 10) + (*ptr - 48);
 			ptr++;
 		}
+		free_arr(buff_arr);
 		exit(status);
 	}
+	free_arr(buff_arr);
 	exit(0);
 }
