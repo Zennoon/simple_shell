@@ -9,7 +9,7 @@
  *
  * Return: buffer containing file content
  */
-char *read_file_content(char *filename, size_t *bytes_read)
+char *read_file_content(char *filename, size_t *bytes_read, char **ev)
 {
 	int fd = open(filename, O_RDONLY);
 	struct stat filestat;
@@ -22,6 +22,7 @@ char *read_file_content(char *filename, size_t *bytes_read)
 
 		write(STDERR_FILENO, m, _strlen(m));
 		free(m);
+		free_arr(ev);
 		exit(127);
 	}
 	if (fstat(fd, &filestat) == -1)
@@ -90,7 +91,7 @@ int execute_from_file(char **av, char **ev)
 	char **lines;
 	int i, status = 0;
 
-	buffer = read_file_content(av[1], &bytes_read);
+	buffer = read_file_content(av[1], &bytes_read, ev);
 	if (!buffer)
 	{
 		return (0);
