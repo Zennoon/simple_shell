@@ -90,8 +90,11 @@ int _env(char **args, char **av, int cmd_no)
 int _setenv(char **args, char **av, int cmd_no)
 {
 	if (args[1] == NULL || args[2] == NULL)
-		print_error(av[0], args[0], "Usage: setenv VARIABLE VALUE",
+	{
+		print_error(av[0], args[0], "Usage: setenv VARIABLE VALUE\n",
 			    cmd_no);
+		return (-1);
+	}
 	if (set_env_var(args[1], args[2]) == -1)
 	{
 		char *msg = _strcat(3, "can't set the variable ", args[1], "\n");
