@@ -120,17 +120,26 @@ int main(__attribute__((unused)) int ac, char **av,
 int exec_command(char **av, char *line, char **ev, int cmd_cnt, int *status)
 {
 	/**int i = 0, j;**/
-	char **uncommented, **commands;
+	char **uncommented, **commands, *hash;
 
 	if (line[0] == '#')
 	{
 		free(line);
 		return (0);
 	}
-	uncommented = _strtok(line, "#");
-	free(line);
-	commands = _strtok(uncommented[0], ";\n");
-	free_arr(uncommented);
+	hash = _strchr(line, '#');
+	if (hash != NULL && *(hash - 1) == ' ')
+	{
+		uncommented = _strtok(line, "#");
+		free(line);
+		commands = _strtok(uncommented[0], ";\n");
+		free_arr(uncommented);
+	}
+	else
+	{
+		commands = _strtok(line, ";\n");
+		free(line);
+	}
 	exec_line_commands(commands, av, ev, cmd_cnt, status);
 	free_arr(commands);
 	return (0);
