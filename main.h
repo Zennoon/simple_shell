@@ -40,6 +40,8 @@ int is_interactive(void);
 char *get_env_var(char *);
 int set_env_var(char *, char *);
 char **replace_variables(char **, int);
+char **init_env(void);
+void extend_environ(void);
 /** command  execution **/
 void exec_line_commands(char **, char **, char **, int, int *);
 int exec_command(char **, char *, char **, int, int *);

@@ -9,6 +9,7 @@
  */
 void exit_program(char **buff_arr, size_t buff_size, int cmd_cnt, int *stat)
 {
+	free_arr(environ);
 	if ((int) buff_size == -1)
 	{
 		free_arr(buff_arr);

@@ -59,6 +59,7 @@ int main(__attribute__((unused)) int ac, char **av,
 {
 	int command_count = 0, stat = 0;
 
+	ev = init_env();
 	while (1)
 	{
 		char *line_buffer = NULL;
@@ -96,6 +97,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 			break;
 	}
+	free_arr(av);
 	return (stat);
 }
 

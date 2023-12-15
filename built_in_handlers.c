@@ -32,7 +32,7 @@ int _cd(char **args, char **av, int cmd_no)
 		set_env_var("OLDPWD", old_buff);
 		if (args[1] != NULL && !_strcmp(args[1], "-"))
 		{
-			write(STDOUT_FILENO, dir, _strlen(dir));
+			write(STDOUT_FILENO, buff, _strlen(buff));
 			write(STDOUT_FILENO, "\n", 1);
 		}
 	}
@@ -142,6 +142,7 @@ int _unsetenv(char **args, char **av, int cmd_no)
 		free(msg);
 		return (-1);
 	}
+	free(environ[i]);
 	while (environ[i] != NULL)
 	{
 		environ[i] = environ[i + 1];

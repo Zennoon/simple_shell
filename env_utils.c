@@ -103,6 +103,7 @@ char *get_env_var(char *var_name)
 int set_env_var(char *var, char *val)
 {
 	int i = 0;
+	char *ptr;
 
 	while (environ[i])
 	{
@@ -118,8 +119,11 @@ int set_env_var(char *var, char *val)
 	}
 	if (environ[i] == NULL)
 	{
+		extend_environ();
 		environ[i + 1] = NULL;
 	}
+	ptr = environ[i];
+	free(ptr);
 	environ[i] = _strcat(3, var, "=", val);
 	if (environ[i] == NULL)
 		return (-1);
