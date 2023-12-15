@@ -9,7 +9,7 @@
  *
  * Return: buffer containing file content
  */
-char *read_file_content(char *filename)
+char *read_file_content(char *filename, size_t *bytes_read)
 {
 	int fd = open(filename, O_RDONLY);
 	struct stat filestat;
@@ -50,6 +50,7 @@ char *read_file_content(char *filename)
 	}
 	buffer[total_bytes_read] = '\0';
 	close(fd);
+	*bytes_read = total_bytes_read;
 	return (buffer);
 }
 
@@ -83,12 +84,13 @@ char **parse_lines(char *buffer, size_t *line_count)
  */
 int execute_from_file(char **av, char **ev)
 {
+	size_t bytes_read;
 	size_t line_count = 0;
 	char *buffer;
 	char **lines;
 	int i, status = 0;
 
-	buffer = read_file_content(av[1]);
+	buffer = read_file_content(av[1], &bytes_read);
 	if (!buffer)
 	{
 		return (0);
