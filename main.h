@@ -43,11 +43,13 @@ char **replace_variables(char **, int);
 char **init_env(void);
 void extend_environ(void);
 int is_path_null(char *, int *, int *, char **, char **, int);
+
 /** command  execution **/
 void exec_line_commands(char **, char **, char **, int, int *);
 int exec_command(char **, char *, char **, int, int *);
 void execute_fork(char *, char **, char **, char **, int, int *, char **);
 int execute_from_file(char **, char **);
+
 /** built-in functions **/
 int is_builtin(char *);
 int execute_builtin(char **, char **, int);
@@ -55,6 +57,7 @@ int _cd(char **, char **, int);
 int _env(char **, char **, int);
 int _setenv(char **, char **, int);
 int _unsetenv(char **, char **, int);
+
 /** structs **/
 
 /**
@@ -67,4 +70,5 @@ typedef struct built_in
 	char *name;
 	int (*func)(char **, char **, int);
 } built_in;
+
 #endif
