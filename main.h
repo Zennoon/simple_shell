@@ -42,6 +42,7 @@ int set_env_var(char *, char *);
 char **replace_variables(char **, int);
 char **init_env(void);
 void extend_environ(void);
+int is_path_null(char *, int *, int *, char **, char **, int);
 /** command  execution **/
 void exec_line_commands(char **, char **, char **, int, int *);
 int exec_command(char **, char *, char **, int, int *);

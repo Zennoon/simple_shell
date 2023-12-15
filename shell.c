@@ -47,6 +47,24 @@ char *get_path(char *command)
 }
 
 /**
+ * check_file - Checks if there is a file of commands to execute from
+ * @av: Argument vector
+ * @ev: Environment Vector
+ * @status: Pointer to the status of the program
+ *
+ * void
+ */
+void check_file(char **av, char **ev, int *status)
+{
+	if (av[1])
+	{
+		*status = execute_from_file(av, ev);
+		free_arr(ev);
+		exit(*status);
+	}
+}
+
+/**
  * main - Displays prompt, accepts user command + arguments, parses, executes
  * @ac: Argument Count
  * @av: Argument Vector
@@ -66,12 +84,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		size_t buff_size = 0;
 		int status = 0, line_size = 0;
 
-		if (av[1])
-		{
-			status = execute_from_file(av, ev);
-			free_arr(ev);
-			return (status);
-		}
+		check_file(av, ev, &status);
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 		{
 			line_size = getline_multi(&line_buffer, &buff_size);
@@ -92,12 +105,10 @@ int main(__attribute__((unused)) int ac, char **av,
 			free(line_buffer);
 			continue;
 		}
-		/**buff_arr = _strtok(line_buffer, " \t");**/
 		if ((int) line_size == -1)
 			exit_program(&line_buffer, line_size, command_count, &stat);
 		++command_count;
 		status = exec_command(av, line_buffer, environ, command_count, &stat);
-		status = status;
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 			break;
 	}

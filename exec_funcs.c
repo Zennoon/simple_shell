@@ -8,6 +8,7 @@
  * @ev: Environment variables
  * @cmd_cnt: The current command number
  * @status: Pointer at the exit status of the last executed command
+ * @commands: The commands given to be freed
  *
  * Return: void
  */
@@ -87,17 +88,37 @@ void exec_line_commands(char **commands, char **av, char **ev, int cmd_cnt,
 		}
 		else
 			c_path = args[0];
-		if (c_path == NULL)
-		{
-			*status = 127;
-			print_error(av[0], args[0], "not found\n", cmd_cnt);
-			i++;
-			free_arr(args);
+		if (is_path_null(c_path, status, &i, args, av, cmd_cnt))
 			continue;
-		}
 		execute_fork(c_path, args, av, ev, cmd_cnt, status, commands);
 		free_if_malloced(c_path, args[0]);
 		free_arr(args);
 		i++;
 	}
+}
+
+/**
+ * is_path_null - Checks if extracted path of a command is NULL and performs
+ * appropriate action if so
+ * @c_path: The extracted command path
+ * @status: Pointer to the status of the last executed command
+ * @iter: Pointer to the iterator of the calling function
+ * @args: Arguments given from the user
+ * @av: Argument vector given to name which holds the name of the program
+ * @cmd_cnt: The current command count/number
+ *
+ * Return: 1 if c_path is NULL, 0 otherwise
+ */
+int is_path_null(char *c_path, int *status, int *iter, char **args, char **av,
+		 int cmd_cnt)
+{
+	if (c_path == NULL)
+	{
+		*status = 127;
+		print_error(av[0], args[0], "not found\n", cmd_cnt);
+		(*iter)++;
+		free_arr(args);
+		return (1);
+	}
+	return (0);
 }
