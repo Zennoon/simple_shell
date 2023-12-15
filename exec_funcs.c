@@ -24,7 +24,8 @@ void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt,
 	}
 	if (child_pid == 0)
 	{
-		if (execve(c_path, args, ev) == -1)
+		*status = execve(c_path, args, ev);
+		if (*status == -1)
 		{
 			*status = 2;
 			print_error(av[0], args[0], "execution failed\n",
@@ -36,8 +37,7 @@ void execute_fork(char *c_path, char **args, char **av, char **ev, int cmd_cnt,
 	}
 	else
 	{
-		*status = 0;
-		wait(NULL);
+		wait(status);
 	}
 }
 
@@ -72,7 +72,7 @@ void exec_line_commands(char **commands, char **av, char **ev, int cmd_cnt,
 		if (!_strcmp(args[0], "exit"))
 		{
 			free_arr(commands);
-			exit_program(args, i);
+			exit_program(args, i, cmd_cnt, status);
 		}
 		if (_strchr(args[0], '/') == NULL)
 		{

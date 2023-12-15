@@ -89,7 +89,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		}
 		/**buff_arr = _strtok(line_buffer, " \t");**/
 		if ((int) line_size == -1)
-			exit_program(&line_buffer, line_size);
+			exit_program(&line_buffer, line_size, command_count, &stat);
 		++command_count;
 		status = exec_command(av, line_buffer, environ, command_count, &stat);
 		status = status;
