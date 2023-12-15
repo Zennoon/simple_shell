@@ -71,6 +71,7 @@ char **_strtok(char *str, char *delim)
 {
 	unsigned int i = 0, j = 0, token_found = 0;
 	char **strarr;
+	int count = 0;
 
 	strarr = malloc(sizeof(char *));
 	if (strarr != NULL)
@@ -91,19 +92,18 @@ char **_strtok(char *str, char *delim)
 			strarr[i][j] = '\0';
 			i++;
 			j = 0;
-			strarr = _realloc(strarr, sizeof(char *) * (i),
-					  sizeof(char *) * (i + 1));
+			strarr = _realloc(strarr, sizeof(char *) * (i), sizeof(char *) * (i + 1));
 			if (strarr != NULL)
 				strarr[i] = malloc(sizeof(char));
 		}
 		str++;
+		count++;
 	}
 	if (token_found)
 	{
 		strarr[i][j] = '\0';
 		i++;
-		strarr = _realloc(strarr, sizeof(char *) * (i),
-				  sizeof(char *) * (i + 1));
+		strarr = _realloc(strarr, sizeof(char *) * (i), sizeof(char *) * (i + 1));
 	}
 	else
 		free(strarr[i]);
