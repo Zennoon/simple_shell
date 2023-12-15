@@ -32,7 +32,7 @@ int _cd(char **args, char **av, int cmd_no)
 		set_env_var("OLDPWD", old_buff);
 		if (args[1] != NULL && !_strcmp(args[1], "-"))
 		{
-			write(STDOUT_FILENO, dir, _strlen(dir));
+			write(STDOUT_FILENO, buff, _strlen(buff));
 			write(STDOUT_FILENO, "\n", 1);
 		}
 	}
@@ -75,7 +75,6 @@ int _env(char **args, char **av, int cmd_no)
 		free(str);
 		ptr++;
 	}
-	free_arr(args);
 	return (0);
 }
 
@@ -91,8 +90,11 @@ int _env(char **args, char **av, int cmd_no)
 int _setenv(char **args, char **av, int cmd_no)
 {
 	if (args[1] == NULL || args[2] == NULL)
-		print_error(av[0], args[0], "Usage: setenv VARIABLE VALUE",
+	{
+		print_error(av[0], args[0], "Usage: setenv VARIABLE VALUE\n",
 			    cmd_no);
+		return (-1);
+	}
 	if (set_env_var(args[1], args[2]) == -1)
 	{
 		char *msg = _strcat(3, "can't set the variable ", args[1], "\n");
@@ -143,6 +145,7 @@ int _unsetenv(char **args, char **av, int cmd_no)
 		free(msg);
 		return (-1);
 	}
+	free(environ[i]);
 	while (environ[i] != NULL)
 	{
 		environ[i] = environ[i + 1];

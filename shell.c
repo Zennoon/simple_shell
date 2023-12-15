@@ -47,6 +47,24 @@ char *get_path(char *command)
 }
 
 /**
+ * check_file - Checks if there is a file of commands to execute from
+ * @av: Argument vector
+ * @ev: Environment Vector
+ * @status: Pointer to the status of the program
+ *
+ * void
+ */
+void check_file(char **av, char **ev, int *status)
+{
+	if (av[1])
+	{
+		*status = execute_from_file(av, ev);
+		free_arr(ev);
+		exit(*status);
+	}
+}
+
+/**
  * main - Displays prompt, accepts user command + arguments, parses, executes
  * @ac: Argument Count
  * @av: Argument Vector
@@ -59,14 +77,14 @@ int main(__attribute__((unused)) int ac, char **av,
 {
 	int command_count = 0, stat = 0;
 
+	ev = init_env();
 	while (1)
 	{
 		char *line_buffer = NULL;
 		size_t buff_size = 0;
 		int status = 0, line_size = 0;
 
-		if (av[1])
-			return (execute_from_file(av, ev));
+		check_file(av, ev, &status);
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 		{
 			line_size = getline_multi(&line_buffer, &buff_size);
@@ -87,15 +105,14 @@ int main(__attribute__((unused)) int ac, char **av,
 			free(line_buffer);
 			continue;
 		}
-		/**buff_arr = _strtok(line_buffer, " \t");**/
 		if ((int) line_size == -1)
-			exit_program(&line_buffer, line_size);
+			exit_program(&line_buffer, line_size, command_count, &stat);
 		++command_count;
 		status = exec_command(av, line_buffer, environ, command_count, &stat);
-		status = status;
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 			break;
 	}
+	free_arr(ev);
 	return (stat);
 }
 
@@ -114,17 +131,26 @@ int main(__attribute__((unused)) int ac, char **av,
 int exec_command(char **av, char *line, char **ev, int cmd_cnt, int *status)
 {
 	/**int i = 0, j;**/
-	char **uncommented, **commands;
+	char **uncommented, **commands, *hash;
 
 	if (line[0] == '#')
 	{
 		free(line);
 		return (0);
 	}
-	uncommented = _strtok(line, "#");
-	free(line);
-	commands = _strtok(uncommented[0], ";\n");
-	free_arr(uncommented);
+	hash = _strchr(line, '#');
+	if (hash != NULL && *(hash - 1) == ' ')
+	{
+		uncommented = _strtok(line, "#");
+		free(line);
+		commands = _strtok(uncommented[0], ";\n");
+		free_arr(uncommented);
+	}
+	else
+	{
+		commands = _strtok(line, ";\n");
+		free(line);
+	}
 	exec_line_commands(commands, av, ev, cmd_cnt, status);
 	free_arr(commands);
 	return (0);

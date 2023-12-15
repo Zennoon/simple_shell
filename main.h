@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <stdarg.h>
+#include <errno.h>
 
 /** Global vars **/
 extern char **environ;
@@ -34,11 +35,14 @@ char *get_path(char *);
 int getline_multi(char **, size_t *);
 void print_prompt(void);
 void print_error(char *, char *, char *, int);
-void exit_program(char **, size_t);
+void exit_program(char **, size_t, int, int *);
 int is_interactive(void);
 char *get_env_var(char *);
 int set_env_var(char *, char *);
 char **replace_variables(char **, int);
+char **init_env(void);
+void extend_environ(void);
+int is_path_null(char *, int *, int *, char **, char **, int);
 /** command  execution **/
 void exec_line_commands(char **, char **, char **, int, int *);
 int exec_command(char **, char *, char **, int, int *);

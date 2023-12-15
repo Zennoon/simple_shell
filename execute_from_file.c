@@ -2,28 +2,44 @@
 #include <string.h>
 
 /**
- * read_file_content - reads files content in to a buffer
- * @filename: name of file
- * @bytes_read: pointer to a variable to store total bytes
- * read
+ * check_fd - Checks if the file descriptor given by open is valid,
+ * exits if not
+ * @fd: The file descriptor to check
+ * @ev: Environment vector (to free if fd is invalid)
+ * @filename: The name of file that open attempted
  *
- * Return: buffer containing file content
+ * Return: void
  */
-char *read_file_content(char *filename, size_t *bytes_read)
+void check_fd(int fd, char **ev, char *filename)
 {
-	int fd = open(filename, O_RDONLY);
-	struct stat filestat;
-	char *buffer;
-	size_t total_bytes_read = 0;
-
 	if (fd == -1)
 	{
 		char *m = _strcat(3, "./hsh: 0: Can't open ", filename, "\n");
 
 		write(STDERR_FILENO, m, _strlen(m));
 		free(m);
+		free_arr(ev);
 		exit(127);
 	}
+}
+
+/**
+ * read_file_content - reads files content in to a buffer
+ * @filename: name of file
+ * @bytes_read: pointer to a variable to store total bytes
+ * read
+ * @ev: Environment variables vector
+ *
+ * Return: buffer containing file content
+ */
+char *read_file_content(char *filename, size_t *bytes_read, char **ev)
+{
+	int fd = open(filename, O_RDONLY);
+	struct stat filestat;
+	char *buffer;
+	size_t total_bytes_read = 0;
+
+	check_fd(fd, ev, filename);
 	if (fstat(fd, &filestat) == -1)
 	{
 		close(fd);
@@ -57,7 +73,6 @@ char *read_file_content(char *filename, size_t *bytes_read)
 /**
  * parse_lines - parses buffer and returns array of lines
  * @buffer: buffer to parse
- * @bytes_read: size of bufer in bytes
  * @line_count: variable to store line count
  *
  * Return: array of lines
@@ -90,7 +105,7 @@ int execute_from_file(char **av, char **ev)
 	char **lines;
 	int i, status = 0;
 
-	buffer = read_file_content(av[1], &bytes_read);
+	buffer = read_file_content(av[1], &bytes_read, ev);
 	if (!buffer)
 	{
 		return (0);
