@@ -79,6 +79,7 @@ void exec_line_commands(char **commands, char **av, char **ev, int cmd_cnt,
 			if (is_builtin(args[0]) == 1)
 			{
 				execute_builtin(args, av, cmd_cnt);
+				free_arr(args);
 				i++;
 				continue;
 			}

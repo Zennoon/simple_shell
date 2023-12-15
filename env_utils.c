@@ -11,17 +11,19 @@ char **get_paths(void)
 	char *path;
 	char **paths;
 
-	if (!environ)
-		return (NULL);
-	for (i = 0; environ[i]; i++)
+	for (i = 0; environ && environ[i]; i++)
 	{
 		char **key = _strtok(environ[i], "=");
 
 		if (_strcmp(key[0], "PATH") == 0)
 		{
 			path = key[1];
-			if (path == NULL)
+			if (path == NULL || path[0] == '\0' ||
+			    !_strcmp(path, "''"))
+			{
+				free_arr(key);
 				return (NULL);
+			}
 			paths = _strtok(path, ":");
 			free_arr(key);
 			return (paths);
@@ -29,7 +31,6 @@ char **get_paths(void)
 		else
 			free_arr(key);
 	}
-
 	return (NULL);
 }
 
@@ -46,7 +47,7 @@ char *command_path(char **dirs, char *command)
 	int i;
 	char *path = NULL;
 
-	for (i = 0; dirs[i]; i++)
+	for (i = 0; dirs && dirs[i]; i++)
 	{
 		DIR *dir = opendir(dirs[i]);
 		struct dirent *file;
