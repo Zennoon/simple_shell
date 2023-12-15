@@ -69,7 +69,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		if (av[1])
 		{
 			status = execute_from_file(av, ev);
-			free(ev);
+			free_arr(ev);
 			return (status);
 		}
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
