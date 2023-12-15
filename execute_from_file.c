@@ -4,6 +4,7 @@
 /**
  * read_file_content - reads files content in to a buffer
  * @filename: name of file
+ * @bytes_read: pointer to a variable to store total bytes
  * read
  *
  * Return: buffer containing file content
@@ -55,6 +56,7 @@ char *read_file_content(char *filename)
 /**
  * parse_lines - parses buffer and returns array of lines
  * @buffer: buffer to parse
+ * @bytes_read: size of bufer in bytes
  * @line_count: variable to store line count
  *
  * Return: array of lines
