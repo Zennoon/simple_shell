@@ -67,7 +67,11 @@ int main(__attribute__((unused)) int ac, char **av,
 		int status = 0, line_size = 0;
 
 		if (av[1])
-			return (execute_from_file(av, ev));
+		{
+			status = execute_from_file(av, ev);
+			free(ev);
+			return (status);
+		}
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 		{
 			line_size = getline_multi(&line_buffer, &buff_size);
