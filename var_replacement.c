@@ -47,6 +47,28 @@ char **replace_variables(char **args, int status)
 }
 
 /**
+ * check_pwd - Checks if the pwd is simple_shell
+ *
+ * Return: 1 if pwd is simple_shell, 0 otherwise
+ */
+int check_pwd(void)
+{
+	char *pwd = get_env_var("PWD");
+	char **pwd_arr = _strtok(pwd, "/");
+	int i = 0;
+
+	while (pwd_arr[i])
+		i++;
+	if (!_strcmp(pwd_arr[i - 1], "simple_shell"))
+	{
+		free_arr(pwd_arr);
+		return (1);
+	}
+	free_arr(pwd_arr);
+	return (0);
+}
+
+/**
  * replace_aliases - Replace aliases with their value
  * @args: An array of the command and its given arguments
  *
@@ -56,36 +78,40 @@ char **replace_aliases(char **args)
 {
 	size_t bytes;
 	int i = 0;
-	char *aliases = read_file_content("./aliases", &bytes, NULL);
-	char **alias_arr = _strtok(aliases, "\n");
 
-	while (args[i] && _strcmp(args[0], "alias"))
+	if (check_pwd())
 	{
-		char *alias_arr_entry = get_alias(alias_arr, args[i]);
+		char *aliases = read_file_content("./aliases", &bytes, NULL);
+		char **alias_arr = _strtok(aliases, "\n");
 
-		if (alias_arr_entry != NULL)
+		while (args[i] && _strcmp(args[0], "alias"))
 		{
-			size_t j = 0, k = 0;
-			char **name_val = _strtok(alias_arr_entry, "=");
-			char *comm = malloc(sizeof(char) *
-					    (_strlen(name_val[1]) - 1));
+			char *alias_arr_entry = get_alias(alias_arr, args[i]);
 
-			for (k = 0; k <= _strlen(name_val[1]); k++)
+			if (alias_arr_entry != NULL)
 			{
-				if (name_val[1][k] != 39)
+				size_t j = 0, k = 0;
+				char **name_val = _strtok(alias_arr_entry, "=");
+				char *comm = malloc(sizeof(char) *
+						    (_strlen(name_val[1]) - 1));
+
+				for (k = 0; k <= _strlen(name_val[1]); k++)
 				{
-					comm[j] = name_val[1][k];
-					j++;
+					if (name_val[1][k] != 39)
+					{
+						comm[j] = name_val[1][k];
+						j++;
+					}
 				}
+				free(args[i]);
+				args[i] = _strcat(1, comm);
+				free_arr(name_val);
+				free(comm);
 			}
-			free(args[i]);
-			args[i] = _strcat(1, comm);
-			free_arr(name_val);
-			free(comm);
+			i++;
 		}
-		i++;
+		free(aliases);
+		free_arr(alias_arr);
 	}
-	free(aliases);
-	free_arr(alias_arr);
 	return (args);
 }
