@@ -79,7 +79,7 @@ char **replace_aliases(char **args)
 	size_t bytes;
 	int i = 0;
 
-	if (check_pwd())
+	if (check_pwd() || 1)
 	{
 		char *aliases = read_file_content("./aliases", &bytes, NULL);
 		char **alias_arr = _strtok(aliases, "\n");
@@ -123,10 +123,7 @@ char **replace_aliases(char **args)
  */
 void clear_aliases(void)
 {
-	if (check_pwd())
-	{
-		int fd = open("./aliases", O_RDWR | O_TRUNC);
+	int fd = open("./aliases", O_RDWR | O_TRUNC);
 
-		close(fd);
-	}
+	close(fd);
 }
