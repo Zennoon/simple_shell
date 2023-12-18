@@ -153,3 +153,53 @@ int _unsetenv(char **args, char **av, int cmd_no)
 	}
 	return (0);
 }
+
+/**
+ * _alias - Implementation of the alias built-in command
+ * @args: An array of the command name and its arguments
+ * @av: Argument Vector
+ * @cmd_no: The current command number
+ *
+ * Return: Always 0 (if the read_file_content func doesn't exit)
+ */
+int _alias(char **args, __attribute__((unused)) char **av,
+	   __attribute__((unused)) int cmd_no)
+{
+	size_t n = 0, i = 0;
+	char *aliases = read_file_content("./aliases", &n, environ);
+	char **alias_arr = _strtok(aliases, "\n");
+
+	if (args[1] == NULL)
+	{
+		print_all_aliases(alias_arr);
+	}
+	else
+	{
+		char **split_equal_sign = _strtok(args[1], "=");
+
+		if (split_equal_sign[1] == NULL)
+		{
+			print_aliases(args, alias_arr);
+		}
+		else
+		{
+			char *alias_concat;
+			int fd = open("./aliases", O_WRONLY | O_TRUNC);
+
+			i = 1;
+			while (args[i])
+			{
+				alias_arr = extend_aliases(alias_arr, args[i]);
+				i++;
+			}
+			alias_concat = concat_aliases(alias_arr);
+			i = write(fd, alias_concat, _strlen(alias_concat));
+			free(alias_concat);
+			close(fd);
+		}
+		free_arr(split_equal_sign);
+	}
+	free(aliases);
+	free_arr(alias_arr);
+	return (0);
+}

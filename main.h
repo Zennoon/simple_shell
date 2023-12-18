@@ -40,9 +40,16 @@ int is_interactive(void);
 char *get_env_var(char *);
 int set_env_var(char *, char *);
 char **replace_variables(char **, int);
+char **replace_aliases(char **);
 char **init_env(void);
 void extend_environ(void);
 int is_path_null(char *, int *, int *, char **, char **, int);
+char *read_file_content(char *, size_t *, char **);
+char *get_alias(char **, char *);
+char **extend_aliases(char **, char *);
+char *concat_aliases(char **);
+void print_aliases(char **, char **);
+void print_all_aliases(char **);
 
 /** command  execution **/
 void exec_line_commands(char **, char **, char **, int, int *);
@@ -57,6 +64,7 @@ int _cd(char **, char **, int);
 int _env(char **, char **, int);
 int _setenv(char **, char **, int);
 int _unsetenv(char **, char **, int);
+int _alias(char **, char **, int);
 
 /** structs **/
 
