@@ -115,3 +115,18 @@ char **replace_aliases(char **args)
 	}
 	return (args);
 }
+
+/**
+ * clear_aliases - Clears the alias list when exiting
+ *
+ * Return: void
+ */
+void clear_aliases(void)
+{
+	if (check_pwd())
+	{
+		int fd = open("./aliases", O_RDWR | O_TRUNC);
+
+		close(fd);
+	}
+}

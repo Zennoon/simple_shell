@@ -112,6 +112,7 @@ int main(__attribute__((unused)) int ac, char **av,
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 			break;
 	}
+	clear_aliases();
 	free_arr(ev);
 	return (stat);
 }

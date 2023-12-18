@@ -50,6 +50,7 @@ char **extend_aliases(char **, char *);
 char *concat_aliases(char **);
 void print_aliases(char **, char **);
 void print_all_aliases(char **);
+void clear_aliases(void);
 
 /** command  execution **/
 void exec_line_commands(char **, char **, char **, int, int *);
