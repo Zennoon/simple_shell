@@ -91,6 +91,7 @@ int main(__attribute__((unused)) int ac, char **av,
 			++command_count;
 			status = exec_command(av, line_buffer, environ,
 					      command_count, &stat);
+			clear_aliases();
 			break;
 		}
 		line_size = getline(&line_buffer, &buff_size, stdin);
@@ -112,7 +113,6 @@ int main(__attribute__((unused)) int ac, char **av,
 		if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || ac != 1)
 			break;
 	}
-	clear_aliases();
 	free_arr(ev);
 	return (stat);
 }
